@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testar Rotas API</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <h1>Teste de Rotas API</h1>
+
+    <div class="card">
+        <h2>Rotas disponíveis</h2>
+        <ul>
+            <li><a href="http://localhost:3001/" target="_blank">Home</a> - Rota raiz</li>
+            <li><a href="http://localhost:3001/pessoas" target="_blank">Listar todas as pessoas</a> - GET /pessoas</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>Buscar pessoa por ID</h2>
+        <div>
+            <label for="pessoaId">ID da pessoa:</label>
+            <input type="number" id="pessoaId" min="1" placeholder="Digite o ID">
+            <button onclick="buscarPessoa()">Buscar</button>
+        </div>
+        <div id="result" class="hidden"></div>
+    </div>
+
+    <script>
+        function buscarPessoa() {
+            const pessoaId = document.getElementById('pessoaId').value;
+            if (!pessoaId) {
+                alert('Por favor, digite um ID válido');
+                return;
+            }
+
+            const resultDiv = document.getElementById('result');
+            resultDiv.classList.add('hidden');
+
+            fetch(`http://localhost:3001/pessoas/${pessoaId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Pessoa não encontrada');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    resultDiv.innerHTML = `
+                        <h3>Resultado:</h3>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                    resultDiv.classList.remove('hidden');
+                })
+                .catch(error => {
+                    resultDiv.innerHTML = `<p class="error">Erro: ${error.message}</p>`;
+                    resultDiv.classList.remove('hidden');
+                });
+        }
+    </script>
+</body>
+
+</html>

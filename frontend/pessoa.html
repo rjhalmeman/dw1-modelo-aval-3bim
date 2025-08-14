@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD - Gerenciamento de Pessoas</title>
+    <link rel="stylesheet" href="pessoa.css">
+</head>
+
+<body>
+    <header>
+        <h1>Gerenciamento de Pessoas</h1>
+    </header>
+
+    <main>
+        <section class="form-section">
+            <h2>Cadastro de Pessoa</h2>
+
+            <form id="pessoaForm">
+                <div class="search-container">
+                    <label for="searchId">Buscar por ID:</label>
+                    <div class="search-input-group">
+                        <input type="number" id="searchId" placeholder="Digite o ID para buscar">
+                        <button type="button" id="btnBuscar">🔍 Buscar</button>
+
+
+                        <button type="button" id="btnIncluir" class="btn-primary">Incluir</button>
+                        <button type="button" id="btnAlterar" class="btn-secondary"
+                            style="display: none;">Alterar</button>
+                        <button type="button" id="btnExcluir" class="btn-danger" style="display: none;">Excluir</button>
+                        <button type="button" id="btnCancelar" class="btn-cancel">Cancelar</button>
+
+                    </div>
+
+                </div>
+
+                <fieldset id="formFields">
+                    <legend>Dados da Pessoa</legend>
+
+                    <div class="form-group">
+                        <label for="nome_pessoa">Nome:</label>
+                        <input type="text" id="nome_pessoa" name="nome_pessoa" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email_pessoa">Email:</label>
+                        <input type="email" id="email_pessoa" name="email_pessoa" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="senha_pessoa">Senha:</label>
+                        <input type="password" id="senha_pessoa" name="senha_pessoa" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="primeiroAcesso">Primeiro Acesso:</label>
+                        <select id="primeiroAcesso" name="primeiroAcesso">
+                            <option value="1">Sim</option>
+                            <option value="0">Não</option>
+                        </select>
+                    </div>
+                </fieldset>
+
+
+            </form>
+        </section>
+
+        <section class="list-section">
+            <!-- <h2>Lista de Pessoas</h2> -->
+            <div class="table-container">
+                <table id="pessoasTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Primeiro Acesso</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pessoasTableBody">
+                        <!-- Dados serão carregados dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Sistema de Gerenciamento de Pessoas</p>
+    </footer>
+
+    <div id="messageContainer" class="message-container"></div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3001';
+        let currentPersonId = null;
+
+        // Elementos do DOM
+        const form = document.getElementById('pessoaForm');
+        const searchId = document.getElementById('searchId');
+        const btnBuscar = document.getElementById('btnBuscar');
+        const btnIncluir = document.getElementById('btnIncluir');
+        const btnAlterar = document.getElementById('btnAlterar');
+        const btnExcluir = document.getElementById('btnExcluir');
+        const btnCancelar = document.getElementById('btnCancelar');
+        const pessoasTableBody = document.getElementById('pessoasTableBody');
+        const messageContainer = document.getElementById('messageContainer');
+
+        // Carregar lista de pessoas ao inicializar
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarPessoas();
+        });
+
+        // Event Listeners
+        btnBuscar.addEventListener('click', buscarPessoa);
+        btnIncluir.addEventListener('click', incluirPessoa);
+        btnAlterar.addEventListener('click', alterarPessoa);
+        btnExcluir.addEventListener('click', excluirPessoa);
+        btnCancelar.addEventListener('click', cancelarOperacao);
+
+        // Função para mostrar mensagens
+        function mostrarMensagem(texto, tipo = 'info') {
+            messageContainer.innerHTML = `<div class="message ${tipo}">${texto}</div>`;
+            setTimeout(() => {
+                messageContainer.innerHTML = '';
+            }, 3000);
+        }
+
+        // Função para limpar formulário
+        function limparFormulario() {
+            form.reset();
+            currentPersonId = null;
+            searchId.value = '';
+            mostrarBotoesIncluir();
+        }
+
+        // Função para mostrar botões de incluir
+        function mostrarBotoesIncluir() {
+            btnIncluir.style.display = 'inline-block';
+            btnAlterar.style.display = 'none';
+            btnExcluir.style.display = 'none';
+        }
+
+        // Função para mostrar botões de alterar/excluir
+        function mostrarBotoesAlterarExcluir() {
+            btnIncluir.style.display = 'none';
+            btnAlterar.style.display = 'inline-block';
+            btnExcluir.style.display = 'inline-block';
+        }
+
+        // Função para buscar pessoa por ID
+        async function buscarPessoa() {
+            const id = searchId.value.trim();
+            if (!id) {
+                mostrarMensagem('Digite um ID para buscar', 'warning');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/pessoas/${id}`);
+
+                if (response.ok) {
+                    const pessoa = await response.json();
+                    preencherFormulario(pessoa);
+                    mostrarBotoesAlterarExcluir();
+                    mostrarMensagem('Pessoa encontrada!', 'success');
+                } else if (response.status === 404) {
+                    limparFormulario();
+                    searchId.value = id;
+                    mostrarBotoesIncluir();
+                    mostrarMensagem('Pessoa não encontrada. Você pode incluir uma nova pessoa.', 'info');
+                } else {
+                    throw new Error('Erro ao buscar pessoa');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                mostrarMensagem('Erro ao buscar pessoa', 'error');
+            }
+        }
+
+        // Função para preencher formulário com dados da pessoa
+        function preencherFormulario(pessoa) {
+            currentPersonId = pessoa.id_pessoa;
+            searchId.value = pessoa.id_pessoa;
+            document.getElementById('nome_pessoa').value = pessoa.nome_pessoa;
+            document.getElementById('email_pessoa').value = pessoa.email_pessoa;
+            document.getElementById('senha_pessoa').value = pessoa.senha_pessoa;
+            document.getElementById('primeiroAcesso').value = pessoa.primeiroAcesso;
+        }
+
+        // Função para incluir pessoa
+        async function incluirPessoa() {
+            const formData = new FormData(form);
+            const pessoa = {
+                nome_pessoa: formData.get('nome_pessoa'),
+                email_pessoa: formData.get('email_pessoa'),
+                senha_pessoa: formData.get('senha_pessoa'),
+                primeiroAcesso: parseInt(formData.get('primeiroAcesso'))
+            };
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/pessoas`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(pessoa)
+                });
+
+                if (response.ok) {
+                    const novaPessoa = await response.json();
+                    mostrarMensagem('Pessoa incluída com sucesso!', 'success');
+                    limparFormulario();
+                    carregarPessoas();
+                } else {
+                    const error = await response.json();
+                    mostrarMensagem(error.error || 'Erro ao incluir pessoa', 'error');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                mostrarMensagem('Erro ao incluir pessoa', 'error');
+            }
+        }
+
+        // Função para alterar pessoa
+        async function alterarPessoa() {
+            if (!currentPersonId) {
+                mostrarMensagem('Nenhuma pessoa selecionada para alterar', 'warning');
+                return;
+            }
+
+            const formData = new FormData(form);
+            const pessoa = {
+                nome_pessoa: formData.get('nome_pessoa'),
+                email_pessoa: formData.get('email_pessoa'),
+                senha_pessoa: formData.get('senha_pessoa'),
+                primeiroAcesso: parseInt(formData.get('primeiroAcesso'))
+            };
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/pessoas/${currentPersonId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(pessoa)
+                });
+
+                if (response.ok) {
+                    mostrarMensagem('Pessoa alterada com sucesso!', 'success');
+                    carregarPessoas();
+                } else {
+                    const error = await response.json();
+                    mostrarMensagem(error.error || 'Erro ao alterar pessoa', 'error');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                mostrarMensagem('Erro ao alterar pessoa', 'error');
+            }
+        }
+
+        // Função para excluir pessoa
+        async function excluirPessoa() {
+            if (!currentPersonId) {
+                mostrarMensagem('Nenhuma pessoa selecionada para excluir', 'warning');
+                return;
+            }
+
+            if (!confirm('Tem certeza que deseja excluir esta pessoa?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/pessoas/${currentPersonId}`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    mostrarMensagem('Pessoa excluída com sucesso!', 'success');
+                    limparFormulario();
+                    carregarPessoas();
+                } else {
+                    const error = await response.json();
+                    mostrarMensagem(error.error || 'Erro ao excluir pessoa', 'error');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                mostrarMensagem('Erro ao excluir pessoa', 'error');
+            }
+        }
+
+        // Função para cancelar operação
+        function cancelarOperacao() {
+            limparFormulario();
+            mostrarMensagem('Operação cancelada', 'info');
+        }
+
+        // Função para carregar lista de pessoas
+        async function carregarPessoas() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/pessoas`);
+
+                if (response.ok) {
+                    const pessoas = await response.json();
+                    renderizarTabelaPessoas(pessoas);
+                } else {
+                    throw new Error('Erro ao carregar pessoas');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                mostrarMensagem('Erro ao carregar lista de pessoas', 'error');
+            }
+        }
+
+        // Função para renderizar tabela de pessoas
+        function renderizarTabelaPessoas(pessoas) {
+            pessoasTableBody.innerHTML = '';
+
+            pessoas.forEach(pessoa => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <button class="btn-id" onclick="selecionarPessoa(${pessoa.id_pessoa})">
+                            ${pessoa.id_pessoa}
+                        </button>
+                    </td>
+                    <td>${pessoa.nome_pessoa}</td>
+                    <td>${pessoa.email_pessoa}</td>
+                    <td>${pessoa.primeiroAcesso ? 'Sim' : 'Não'}</td>
+                    <td>
+                        <button class="btn-small btn-secondary" onclick="selecionarPessoa(${pessoa.id_pessoa})">
+                            Editar
+                        </button>
+                    </td>
+                `;
+                pessoasTableBody.appendChild(row);
+            });
+        }
+
+        // Função para selecionar pessoa da tabela
+        async function selecionarPessoa(id) {
+            searchId.value = id;
+            await buscarPessoa();
+        }
+    </script>
+</body>
+
+</html>
