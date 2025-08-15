@@ -24,15 +24,12 @@
                         <input type="number" id="searchId" placeholder="Digite o ID para buscar">
                         <button type="button" id="btnBuscar">🔍 Buscar</button>
 
-
                         <button type="button" id="btnIncluir" class="btn-primary">Incluir</button>
                         <button type="button" id="btnAlterar" class="btn-secondary"
                             style="display: none;">Alterar</button>
                         <button type="button" id="btnExcluir" class="btn-danger" style="display: none;">Excluir</button>
                         <button type="button" id="btnCancelar" class="btn-cancel">Cancelar</button>
-
                     </div>
-
                 </div>
 
                 <fieldset id="formFields">
@@ -54,20 +51,22 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="primeiroAcesso">Primeiro Acesso:</label>
-                        <select id="primeiroAcesso" name="primeiroAcesso">
-                            <option value="1">Sim</option>
-                            <option value="0">Não</option>
+                        <label for="primeiro_acesso_pessoa">Primeiro Acesso:</label>
+                        <select id="primeiro_acesso_pessoa" name="primeiro_acesso_pessoa">
+                            <option value="true">Sim</option>
+                            <option value="false">Não</option>
                         </select>
                     </div>
+
+                    <div class="form-group">
+                        <label for="data_nascimento">Data de Nascimento:</label>
+                        <input type="date" id="data_nascimento" name="data_nascimento">
+                    </div>
                 </fieldset>
-
-
             </form>
         </section>
 
         <section class="list-section">
-            <!-- <h2>Lista de Pessoas</h2> -->
             <div class="table-container">
                 <table id="pessoasTable">
                     <thead>
@@ -76,6 +75,7 @@
                             <th>Nome</th>
                             <th>Email</th>
                             <th>Primeiro Acesso</th>
+                            <th>Data Nascimento</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -150,6 +150,19 @@
             btnExcluir.style.display = 'inline-block';
         }
 
+        // Função para formatar data para exibição
+        function formatarData(dataString) {
+            if (!dataString) return '';
+            const data = new Date(dataString);
+            return data.toLocaleDateString('pt-BR');
+        }
+
+        // Função para converter data para formato ISO
+        function converterDataParaISO(dataString) {
+            if (!dataString) return null;
+            return new Date(dataString).toISOString();
+        }
+
         // Função para buscar pessoa por ID
         async function buscarPessoa() {
             const id = searchId.value.trim();
@@ -184,10 +197,19 @@
         function preencherFormulario(pessoa) {
             currentPersonId = pessoa.id_pessoa;
             searchId.value = pessoa.id_pessoa;
-            document.getElementById('nome_pessoa').value = pessoa.nome_pessoa;
-            document.getElementById('email_pessoa').value = pessoa.email_pessoa;
-            document.getElementById('senha_pessoa').value = pessoa.senha_pessoa;
-            document.getElementById('primeiroAcesso').value = pessoa.primeiroAcesso;
+            document.getElementById('nome_pessoa').value = pessoa.nome_pessoa || '';
+            document.getElementById('email_pessoa').value = pessoa.email_pessoa || '';
+            document.getElementById('senha_pessoa').value = pessoa.senha_pessoa || '';
+            document.getElementById('primeiro_acesso_pessoa').value = pessoa.primeiro_acesso_pessoa ? 'true' : 'false';
+            
+            // Formatação da data para input type="date"
+            if (pessoa.data_nascimento) {
+                const data = new Date(pessoa.data_nascimento);
+                const dataFormatada = data.toISOString().split('T')[0];
+                document.getElementById('data_nascimento').value = dataFormatada;
+            } else {
+                document.getElementById('data_nascimento').value = '';
+            }
         }
 
         // Função para incluir pessoa
@@ -197,7 +219,8 @@
                 nome_pessoa: formData.get('nome_pessoa'),
                 email_pessoa: formData.get('email_pessoa'),
                 senha_pessoa: formData.get('senha_pessoa'),
-                primeiroAcesso: parseInt(formData.get('primeiroAcesso'))
+                primeiro_acesso_pessoa: formData.get('primeiro_acesso_pessoa') === 'true',
+                data_nascimento: formData.get('data_nascimento') || null
             };
 
             try {
@@ -236,7 +259,8 @@
                 nome_pessoa: formData.get('nome_pessoa'),
                 email_pessoa: formData.get('email_pessoa'),
                 senha_pessoa: formData.get('senha_pessoa'),
-                primeiroAcesso: parseInt(formData.get('primeiroAcesso'))
+                primeiro_acesso_pessoa: formData.get('primeiro_acesso_pessoa') === 'true',
+                data_nascimento: formData.get('data_nascimento') || null
             };
 
             try {
@@ -328,7 +352,8 @@
                     </td>
                     <td>${pessoa.nome_pessoa}</td>
                     <td>${pessoa.email_pessoa}</td>
-                    <td>${pessoa.primeiroAcesso ? 'Sim' : 'Não'}</td>
+                    <td>${pessoa.primeiro_acesso_pessoa ? 'Sim' : 'Não'}</td>
+                    <td>${formatarData(pessoa.data_nascimento)}</td>
                     <td>
                         <button class="btn-small btn-secondary" onclick="selecionarPessoa(${pessoa.id_pessoa})">
                             Editar
