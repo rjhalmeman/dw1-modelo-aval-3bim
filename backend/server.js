@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 
 // Importar a configuração do banco PostgreSQL
-const db = require('./config/database'); // Ajuste o caminho conforme necessário
+const db = require('./database'); // Ajuste o caminho conforme necessário
 
 // Configurações do servidor - quando em produção, você deve substituir o IP e a porta pelo do seu servidor remoto
 //const HOST = '192.168.1.100'; // Substitua pelo IP do seu servidor remoto
@@ -62,7 +62,7 @@ app.get('/', (req, res) => {
 app.get('/health', async (req, res) => {
   try {
     const connectionTest = await db.testConnection();
-    
+
     if (connectionTest) {
       res.status(200).json({
         status: 'OK',
@@ -92,7 +92,7 @@ app.get('/health', async (req, res) => {
 // Middleware global de tratamento de erros
 app.use((err, req, res, next) => {
   console.error('Erro não tratado:', err);
-  
+
   res.status(500).json({
     error: 'Erro interno do servidor',
     message: process.env.NODE_ENV === 'development' ? err.message : 'Algo deu errado',
@@ -115,23 +115,23 @@ const startServer = async () => {
     // Testar conexão com o banco antes de iniciar o servidor
     console.log('Testando conexão com PostgreSQL...');
     const connectionTest = await db.testConnection();
-    
+
     if (!connectionTest) {
       console.error('❌ Falha na conexão com PostgreSQL');
       process.exit(1);
     }
-    
+
     console.log('✅ PostgreSQL conectado com sucesso');
-    
+
     const PORT = process.env.PORT || PORT_FIXA;
-    
+
     app.listen(PORT, () => {
       console.log(`🚀 Servidor rodando em http://${HOST}:${PORT}`);
       console.log(`📊 Health check disponível em http://${HOST}:${PORT}/health`);
       console.log(`🗄️ Banco de dados: PostgreSQL`);
       console.log(`🌍 Ambiente: ${process.env.NODE_ENV || 'development'}`);
     });
-    
+
   } catch (error) {
     console.error('❌ Erro ao iniciar o servidor:', error);
     process.exit(1);
@@ -141,7 +141,7 @@ const startServer = async () => {
 // Tratamento de sinais para encerramento graceful
 process.on('SIGINT', async () => {
   console.log('\n🔄 Encerrando servidor...');
-  
+
   try {
     await db.pool.end();
     console.log('✅ Conexões com PostgreSQL encerradas');
@@ -154,7 +154,7 @@ process.on('SIGINT', async () => {
 
 process.on('SIGTERM', async () => {
   console.log('\n🔄 SIGTERM recebido, encerrando servidor...');
-  
+
   try {
     await db.pool.end();
     console.log('✅ Conexões com PostgreSQL encerradas');
