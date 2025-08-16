@@ -6,12 +6,15 @@ const dbConfig = {
   port: 5432, // Porta padrão do PostgreSQL
   user: 'radames', // Usuário padrão do PostgreSQL (ajuste conforme necessário)
   password: 'Lageado001.',
-  database: 'bdAulasExemplos',
+  database: 'avap',
   // Configurações específicas do PostgreSQL
   ssl: false, // Defina como true se usar SSL
   idleTimeoutMillis: 30000, // Timeout para conexões ociosas
   connectionTimeoutMillis: 2000, // Timeout para estabelecer conexão
 };
+
+const schema = 'public'; // Defina o schema padrão
+
 
 // Pool de conexões para melhor performance
 const pool = new Pool({
@@ -34,10 +37,10 @@ const testConnection = async () => {
   try {
     const client = await pool.connect();
     console.log('Conectado ao PostgreSQL com sucesso!');
-    
+
     // Definir o search_path para o schema peer
-    await client.query('SET search_path TO peer, public');
-    
+    await client.query('SET search_path TO ' + schema);
+
     client.release();
     return true;
   } catch (err) {
@@ -68,9 +71,9 @@ const transaction = async (callback) => {
   try {
     await client.query('BEGIN');
     await client.query('SET search_path TO peer, public');
-    
+
     const result = await callback(client);
-    
+
     await client.query('COMMIT');
     return result;
   } catch (error) {
