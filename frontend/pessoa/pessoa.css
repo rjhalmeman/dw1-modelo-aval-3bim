@@ -180,6 +180,17 @@ button {
     box-shadow: 0 4px 12px rgba(106, 160, 111, 0.4);
 }
 
+.btn-save {
+    background: linear-gradient(135deg, #ffa600, #ffd53f);
+    color: white;
+}
+
+.btn-save:hover {
+    background: linear-gradient(135deg, #ffa600, #ffd53f);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(106, 160, 111, 0.4);
+}
+
 .btn-danger {
     background: linear-gradient(135deg, #dc3545, #c82333);
     color: white;

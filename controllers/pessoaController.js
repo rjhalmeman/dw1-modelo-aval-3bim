@@ -12,8 +12,9 @@ exports.listarPessoas = async (req, res) => {
 };
 
 exports.criarPessoa = async (req, res) => {
+//  console.log('Criando pessoa com dados:', req.body);
   try {
-    const { nome_pessoa, email_pessoa, senha_pessoa, primeiro_acesso_pessoa = true, data_nascimento } = req.body;
+    const { id_pessoa, nome_pessoa, email_pessoa, senha_pessoa, primeiro_acesso_pessoa = true, data_nascimento } = req.body;
 
     // Validação básica
     if (!nome_pessoa || !email_pessoa || !senha_pessoa) {
@@ -31,8 +32,8 @@ exports.criarPessoa = async (req, res) => {
     }
 
     const result = await db.query(
-      'INSERT INTO pessoa (nome_pessoa, email_pessoa, senha_pessoa, primeiro_acesso_pessoa, data_nascimento) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [nome_pessoa, email_pessoa, senha_pessoa, primeiro_acesso_pessoa, data_nascimento]
+      'INSERT INTO pessoa (id_pessoa, nome_pessoa, email_pessoa, senha_pessoa, primeiro_acesso_pessoa, data_nascimento) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+      [id_pessoa, nome_pessoa, email_pessoa, senha_pessoa, primeiro_acesso_pessoa, data_nascimento]
     );
 
     res.status(201).json(result.rows[0]);
