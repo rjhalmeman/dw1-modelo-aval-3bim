@@ -109,15 +109,12 @@ app.use('*', (req, res) => {
 
 // Importando as rotas
 const pessoaRoutes = require('../routes/pessoaRoutes');
-const loginRoutes = require('../routes/loginRoutes');
+//const loginRoutes = require('../routes/loginRoutes');
 // const produtoRoutes = require('./routes/produto');
 
 // Rotas
 app.use('/pessoas', pessoaRoutes);
-app.use('/login', loginRoutes);
-
-
-
+//app.use('/login', loginRoutes);
 
 
 
