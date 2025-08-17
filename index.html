@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Avap - Login</title>
+</head>
+
+<body>
+  <h2>Login</h2>
+  <div id="loginFrame">
+    <input type="email" id="email" placeholder="Digite seu e-mail" value="berola@gmail.com" required />
+    <button onclick="verificarEmail()">Avançar</button>
+    <br>
+    <button onclick="testeRota()">teste rota</button>
+  </div>
+
+  <div id="senhaFrame" style="display:none;">
+    <p id="nomeUsuario"></p>
+    <input type="password" id="senha" placeholder="Digite sua senha" value="abc123" required />
+    <button onclick="verificarSenha()">Entrar</button>
+
+  </div>
+
+  <script>
+    let emailGlobal = '';
+    const API_BASE_URL = 'http://localhost:3001'; // Define  o host e a porta do servidor
+
+
+    async function testeRota() {
+      try {
+        const res = await fetch(API_BASE_URL + '/testeRota');
+        const data = await res.json();
+        alert("Resposta do servidor: " + JSON.stringify(data));
+      } catch (error) {
+        alert("Erro ao acessar a rota de teste: " + error.message);
+      }
+    }
+
+    async function verificarEmail() {
+      const email = document.getElementById("email").value;
+      emailGlobal = email;
+
+      const res = await fetch(API_BASE_URL + '/verificar-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
+
+      const data = await res.json();
+
+      if (data.status === 'existe') {
+        document.getElementById("loginFrame").style.display = "none";
+        document.getElementById("senhaFrame").style.display = "block";
+        document.getElementById("nomeUsuario").innerText = `Olá, ${data.nome}`;
+      } else {
+        const cadastrar = confirm("E-mail não encontrado. Deseja se cadastrar?");
+        if (cadastrar) {
+          alert("Redirecionando para tela de cadastro... (não implementado)");
+        }
+      }
+    }
+
+    async function verificarSenha() {
+      const senha = document.getElementById("senha").value;
+      //  alert("Verificando senha..." + senha);
+      const res = await fetch(API_BASE_URL + '/verificar-senha', {
+        credentials: 'include',
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: emailGlobal, senha }),
+        credentials: 'include'
+      });
+
+      const data = await res.json();
+      //  alert("Resposta do servidor: " + JSON.stringify(data));
+
+      if (data.status === 'ok') {
+        window.location.href = API_BASE_URL + "/menu";
+      } else {
+        alert("Senha incorreta!");
+      }
+    }
+  </script>
+</body>
+
+</html>

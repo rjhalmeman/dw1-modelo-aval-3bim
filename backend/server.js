@@ -27,9 +27,7 @@ app.use((req, res, next) => {
   next();
 });
 
-// Importando as rotas
-const pessoaRoutes = require('../routes/pessoaRoutes');
-// const produtoRoutes = require('./routes/produto');
+
 
 // Middlewares
 app.use(express.json());
@@ -45,9 +43,6 @@ app.use((err, req, res, next) => {
   next(err);
 });
 
-// Rotas
-app.use('/pessoas', pessoaRoutes);
-// app.use('/produtos', produtoRoutes);
 
 // Rota padrão
 app.get('/', (req, res) => {
@@ -57,6 +52,8 @@ app.get('/', (req, res) => {
     timestamp: new Date().toISOString()
   });
 });
+
+
 
 // Rota para testar a conexão com o banco
 app.get('/health', async (req, res) => {
@@ -108,6 +105,21 @@ app.use('*', (req, res) => {
     timestamp: new Date().toISOString()
   });
 });
+
+
+// Importando as rotas
+const pessoaRoutes = require('../routes/pessoaRoutes');
+const loginRoutes = require('../routes/loginRoutes');
+// const produtoRoutes = require('./routes/produto');
+
+// Rotas
+app.use('/pessoas', pessoaRoutes);
+app.use('/login', loginRoutes);
+
+
+
+
+
 
 // Inicialização do servidor
 const startServer = async () => {
