@@ -43,7 +43,7 @@
 
       
 
-          const response = await fetch(`${API_BASE_URL}/verificarEmail`, {
+          const response = await fetch(`${API_BASE_URL}/login/verificarEmail`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email })
@@ -66,7 +66,7 @@
     async function verificarSenha() {
       const senha = document.getElementById("senha").value;
       //  alert("Verificando senha..." + senha);
-      const res = await fetch(API_BASE_URL + '/verificarSenha', {
+      const res = await fetch(API_BASE_URL + '/login/verificarSenha', {
         credentials: 'include',
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
