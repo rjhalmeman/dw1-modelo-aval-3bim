@@ -17,7 +17,7 @@
 
   <div id="senhaFrame" style="display:none;">
     <p id="nomeUsuario"></p>
-    <input type="password" id="senha" placeholder="Digite sua senha" value="abc123" required />
+    <input type="password" id="senha" placeholder="Digite sua senha" value="123" required />
     <button onclick="verificarSenha()">Entrar</button>
 
   </div>
@@ -41,13 +41,11 @@
       const email = document.getElementById("email").value;
       emailGlobal = email;
 
-      
-
-          const response = await fetch(`${API_BASE_URL}/login/verificarEmail`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email })
-    });
+      const response = await fetch(`${API_BASE_URL}/login/verificarEmail`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      });
 
       const data = await response.json();
 

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Menu Principal</title>
+</head>
+
+<body>
+  <h2 id="boasVindas">.</h2>
+  <nav>
+    <ul>
+      <li><a href="http://localhost:3005/CrudPessoa">Crud Pessoa</a></li>
+      <li><a href="http://localhost:3005/crudQuestao">Crud Questão</a></li>
+      <li><a href="http://localhost:3005/crudAvaliacao">Crud Avaliação</a></li>
+    </ul>
+  </nav>
+
+  <button onclick="logout()">Sair</button>
+
+  <script>
+     const API_BASE_URL = 'http://localhost:3001'; // Define  o host e a porta do servidor
+    let ehProfessor = false;
+
+    async function usuarioAutorizado() {
+      const res = await fetch(API_BASE_URL+'/usuarioLogado', {
+        credentials: 'include'
+      });
+      const data = await res.json();
+      //    alert("Dados do usuário: " + JSON.stringify(data));  
+
+      if (data.status === 'ok') {
+        document.getElementById('boasVindas').innerText = `${data.nome} - ${data.mnemonicoProfessor ? ` Professor: ${data.mnemonicoProfessor}` : ''}`;
+        if (data.mnemonicoProfessor) {
+          ehProfessor = true
+        }
+      } else {
+        alert("Você precisa fazer login.");
+        window.location.href = "index.html";
+      }
+    }
+
+    async function logout() {
+      await fetch('http://localhost:3005/logout', {
+        method: 'POST',
+        credentials: 'include'
+      });
+      window.location.href = "http://localhost:3005/inicio";
+    }
+
+    usuarioAutorizado();
+  </script>
+</body>
+
+</html>

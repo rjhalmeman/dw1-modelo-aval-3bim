@@ -1,5 +1,8 @@
 const express = require('express');
 const app = express();
+const path = require('path');
+
+const cookieParser = require('cookie-parser');
 
 // Importar a configuração do banco PostgreSQL
 const db = require('./database'); // Ajuste o caminho conforme necessário
@@ -10,11 +13,13 @@ const HOST = 'localhost'; // Para desenvolvimento local
 const PORT_FIXA = 3001; // Porta fixa
 
 
+
+
 // Importando as rotas
 const pessoaRoutes = require('./routes/pessoaRoutes');
 const loginRoutes = require('./routes/loginRoutes');
-// const produtoRoutes = require('./routes/produto');
 
+app.use(cookieParser());
 
 // Middleware para permitir CORS (Cross-Origin Resource Sharing)
 // Isso é útil se você estiver fazendo requisições de um frontend que está rodando em um domínio diferente
@@ -61,10 +66,7 @@ app.use((err, req, res, next) => {
 // Rotas
 app.use('/pessoas', pessoaRoutes);
 app.use('/login', loginRoutes);
-
-
-
-
+app.use('/menu', express.static(path.join(__dirname, '../frontend/menu.html')));
 
 
 // Rota padrão
