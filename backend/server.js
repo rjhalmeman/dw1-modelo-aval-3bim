@@ -9,6 +9,13 @@ const db = require('./database'); // Ajuste o caminho conforme necessário
 const HOST = 'localhost'; // Para desenvolvimento local
 const PORT_FIXA = 3001; // Porta fixa
 
+
+// Importando as rotas
+const pessoaRoutes = require('../routes/pessoaRoutes');
+const loginRoutes = require('../routes/loginRoutes');
+// const produtoRoutes = require('./routes/produto');
+
+
 // Middleware para permitir CORS (Cross-Origin Resource Sharing)
 // Isso é útil se você estiver fazendo requisições de um frontend que está rodando em um domínio diferente
 // ou porta do backend.
@@ -27,8 +34,6 @@ app.use((req, res, next) => {
   next();
 });
 
-
-
 // Middlewares
 app.use(express.json());
 
@@ -43,6 +48,14 @@ app.use((err, req, res, next) => {
   next(err);
 });
 
+// Rotas
+app.use('/pessoas', pessoaRoutes);
+app.use('/login', loginRoutes);
+
+
+
+
+
 
 // Rota padrão
 app.get('/', (req, res) => {
@@ -52,7 +65,6 @@ app.get('/', (req, res) => {
     timestamp: new Date().toISOString()
   });
 });
-
 
 
 // Rota para testar a conexão com o banco
@@ -107,14 +119,7 @@ app.use('*', (req, res) => {
 });
 
 
-// Importando as rotas
-const pessoaRoutes = require('../routes/pessoaRoutes');
-//const loginRoutes = require('../routes/loginRoutes');
-// const produtoRoutes = require('./routes/produto');
 
-// Rotas
-app.use('/pessoas', pessoaRoutes);
-//app.use('/login', loginRoutes);
 
 
 

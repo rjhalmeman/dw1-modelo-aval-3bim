@@ -253,9 +253,3 @@ exports.atualizarSenha = async (req, res) => {
   }
 };
 
-exports.testeRota = (req, res) => {
-  res.json({
-    message: 'Rota de teste funcionando',
-    timestamp: new Date().toISOString()
-  });
-};
