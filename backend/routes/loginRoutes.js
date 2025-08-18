@@ -2,8 +2,11 @@ const express = require('express');
 const router = express.Router();
 const loginController = require('../controllers/loginController');
 
-// CRUD de Pessoas
-//router.get('/', loginController.testeRota);
+// Rotas de autenticação
+router.post('/verificarEmail', loginController.verificarEmail);
+router.post('/verificarSenha', loginController.verificarSenha);
+
+// Rotas CRUD
 router.get('/', loginController.listarPessoas);
 router.post('/', loginController.criarPessoa);
 router.get('/:id', loginController.obterPessoa);

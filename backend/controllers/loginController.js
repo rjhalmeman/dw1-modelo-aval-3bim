@@ -12,8 +12,106 @@ exports.listarPessoas = async (req, res) => {
   }
 };
 
+exports.verificarEmail = async (req, res) => {
+  const { email } = req.body;
+
+  const sql = 'SELECT nome_pessoa FROM pessoa WHERE email_pessoa = $1'; // Postgres usa $1, $2...
+
+  console.log('rota verificarEmail:', sql, email);
+
+  try {
+    const result = await db.query(sql, [email]); // igual listarPessoas
+
+    if (result.rows.length > 0) {
+      return res.json({ status: 'existe', nome: result.rows[0].nome_pessoa });
+    }
+
+    res.json({ status: 'nao_encontrado' });
+  } catch (err) {
+    console.error('Erro em verificarEmail:', err);
+    res.status(500).json({ status: 'erro', mensagem: err.message });
+  }
+};
+
+
+// Verificar senha
+exports.verificarSenha = async (req, res) => {
+  const { email, senha } = req.body;
+
+  const sqlPessoa = `
+    SELECT id_pessoa, nome_pessoa 
+    FROM pessoa 
+    WHERE email_pessoa = $1 AND senha_pessoa = $2
+  `;
+  const sqlProfessor = `
+    SELECT mnemonico_professor 
+    FROM professor 
+    WHERE pessoa_id_pessoa = $1
+  `;
+
+  console.log('Rota verificarSenha:', sqlPessoa, email, senha);
+
+  try {
+    // 1. Verifica se existe pessoa com email/senha
+    const resultPessoa = await db.query(sqlPessoa, [email, senha]);
+
+    if (resultPessoa.rows.length === 0) {
+      return res.json({ status: 'senha_incorreta' });
+    }
+
+    const { id_pessoa, nome_pessoa } = resultPessoa.rows[0];
+    console.log('Usuário encontrado:', resultPessoa.rows[0]);
+
+    // 2. Verifica se é professor
+    const resultProfessor = await db.query(sqlProfessor, [id_pessoa]);
+
+    const mnemonicoProfessor = resultProfessor.rows.length > 0
+      ? resultProfessor.rows[0].mnemonico_professor
+      : null;
+
+    if (mnemonicoProfessor) {
+      console.log('Usuário é professor, mnemonico:', mnemonicoProfessor);
+    } else {
+      console.log('Usuário não é professor');
+    }
+
+    // 3. Define cookie
+    res.cookie('usuarioLogado', nome_pessoa, {
+      sameSite: 'None',
+      secure: true,
+      httpOnly: true,
+      path: '/',
+      maxAge: 24 * 60 * 60 * 1000, // 1 dia
+    });
+
+    return res.json({
+      status: 'ok',
+      nome: nome_pessoa,
+      mnemonicoProfessor,
+    });
+
+  } catch (err) {
+    console.error('Erro ao verificar senha:', err);
+    return res.status(500).json({ status: 'erro', mensagem: err.message });
+  }
+}
+
+
+// Logout
+exports.logout = (req, res) => {
+  res.clearCookie('usuarioLogado', {
+    sameSite: 'None',
+    secure: true,
+    httpOnly: true,
+    path: '/',
+  });
+  console.log("Cookie 'usuarioLogado' removido com sucesso");
+  res.json({ status: 'deslogado' });
+}
+
+
 exports.criarPessoa = async (req, res) => {
-//  console.log('Criando pessoa com dados:', req.body);
+  //  console.log('Criando pessoa com dados:', req.body);
   try {
     const { id_pessoa, nome_pessoa, email_pessoa, senha_pessoa, primeiro_acesso_pessoa = true, data_nascimento } = req.body;
 

@@ -41,13 +41,15 @@
       const email = document.getElementById("email").value;
       emailGlobal = email;
 
-      const res = await fetch(API_BASE_URL + '/verificar-email', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      });
+      
 
-      const data = await res.json();
+          const response = await fetch(`${API_BASE_URL}/verificarEmail`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email })
+    });
+
+      const data = await response.json();
 
       if (data.status === 'existe') {
         document.getElementById("loginFrame").style.display = "none";
@@ -64,7 +66,7 @@
     async function verificarSenha() {
       const senha = document.getElementById("senha").value;
       //  alert("Verificando senha..." + senha);
-      const res = await fetch(API_BASE_URL + '/verificar-senha', {
+      const res = await fetch(API_BASE_URL + '/verificarSenha', {
         credentials: 'include',
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
