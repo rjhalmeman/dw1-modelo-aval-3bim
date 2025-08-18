@@ -1,17 +1,18 @@
-import { query } from '../backend/database.js';
+const db = require('../database.js');
+
 
 // Funções do controller
-export async function listarPessoas(req, res) {
+exports.listarPessoas = async (req, res) => {
   try {
-    const result = await query('SELECT * FROM pessoa ORDER BY id_pessoa');
+    const result = await db.query('SELECT * FROM pessoa ORDER BY id_pessoa');
     res.json(result.rows);
   } catch (error) {
     console.error('Erro ao listar pessoas:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
-}
+};
 
-export async function criarPessoa(req, res) {
+exports.criarPessoa = async (req, res) => {
 //  console.log('Criando pessoa com dados:', req.body);
   try {
     const { id_pessoa, nome_pessoa, email_pessoa, senha_pessoa, primeiro_acesso_pessoa = true, data_nascimento } = req.body;
@@ -31,7 +32,7 @@ export async function criarPessoa(req, res) {
       });
     }
 
-    const result = await query(
+    const result = await db.query(
       'INSERT INTO pessoa (id_pessoa, nome_pessoa, email_pessoa, senha_pessoa, primeiro_acesso_pessoa, data_nascimento) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
       [id_pessoa, nome_pessoa, email_pessoa, senha_pessoa, primeiro_acesso_pessoa, data_nascimento]
     );
@@ -56,9 +57,9 @@ export async function criarPessoa(req, res) {
 
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
-}
+};
 
-export async function obterPessoa(req, res) {
+exports.obterPessoa = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
 
@@ -66,7 +67,7 @@ export async function obterPessoa(req, res) {
       return res.status(400).json({ error: 'ID deve ser um número válido' });
     }
 
-    const result = await query(
+    const result = await db.query(
       'SELECT * FROM pessoa WHERE id_pessoa = $1',
       [id]
     );
@@ -80,9 +81,9 @@ export async function obterPessoa(req, res) {
     console.error('Erro ao obter pessoa:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
-}
+};
 
-export async function atualizarPessoa(req, res) {
+exports.atualizarPessoa = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     const { nome_pessoa, email_pessoa, senha_pessoa, primeiro_acesso_pessoa, data_nascimento } = req.body;
@@ -102,7 +103,7 @@ export async function atualizarPessoa(req, res) {
     }
 
     // Verifica se a pessoa existe
-    const existingPersonResult = await query(
+    const existingPersonResult = await db.query(
       'SELECT * FROM pessoa WHERE id_pessoa = $1',
       [id]
     );
@@ -122,7 +123,7 @@ export async function atualizarPessoa(req, res) {
     };
 
     // Atualiza a pessoa
-    const updateResult = await query(
+    const updateResult = await db.query(
       'UPDATE pessoa SET nome_pessoa = $1, email_pessoa = $2, senha_pessoa = $3, primeiro_acesso_pessoa = $4, data_nascimento = $5 WHERE id_pessoa = $6 RETURNING *',
       [updatedFields.nome_pessoa, updatedFields.email_pessoa, updatedFields.senha_pessoa, updatedFields.primeiro_acesso_pessoa, updatedFields.data_nascimento, id]
     );
@@ -140,9 +141,9 @@ export async function atualizarPessoa(req, res) {
 
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
-}
+};
 
-export async function deletarPessoa(req, res) {
+exports.deletarPessoa = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
 
@@ -151,7 +152,7 @@ export async function deletarPessoa(req, res) {
     }
 
     // Verifica se a pessoa existe
-    const existingPersonResult = await query(
+    const existingPersonResult = await db.query(
       'SELECT * FROM pessoa WHERE id_pessoa = $1',
       [id]
     );
@@ -161,7 +162,7 @@ export async function deletarPessoa(req, res) {
     }
 
     // Deleta a pessoa (as constraints CASCADE cuidarão das dependências)
-    await query(
+    await db.query(
       'DELETE FROM pessoa WHERE id_pessoa = $1',
       [id]
     );
@@ -179,10 +180,10 @@ export async function deletarPessoa(req, res) {
 
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
-}
+};
 
 // Função adicional para buscar pessoa por email
-export async function obterPessoaPorEmail(req, res) {
+exports.obterPessoaPorEmail = async (req, res) => {
   try {
     const { email } = req.params;
 
@@ -190,7 +191,7 @@ export async function obterPessoaPorEmail(req, res) {
       return res.status(400).json({ error: 'Email é obrigatório' });
     }
 
-    const result = await query(
+    const result = await db.query(
       'SELECT * FROM pessoa WHERE email_pessoa = $1',
       [email]
     );
@@ -204,10 +205,10 @@ export async function obterPessoaPorEmail(req, res) {
     console.error('Erro ao obter pessoa por email:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
-}
+};
 
 // Função para atualizar apenas a senha
-export async function atualizarSenha(req, res) {
+exports.atualizarSenha = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     const { senha_atual, nova_senha } = req.body;
@@ -223,7 +224,7 @@ export async function atualizarSenha(req, res) {
     }
 
     // Verifica se a pessoa existe e a senha atual está correta
-    const personResult = await query(
+    const personResult = await db.query(
       'SELECT * FROM pessoa WHERE id_pessoa = $1',
       [id]
     );
@@ -240,7 +241,7 @@ export async function atualizarSenha(req, res) {
     }
 
     // Atualiza apenas a senha
-    const updateResult = await query(
+    const updateResult = await db.query(
       'UPDATE pessoa SET senha_pessoa = $1 WHERE id_pessoa = $2 RETURNING id_pessoa, nome_pessoa, email_pessoa, primeiro_acesso_pessoa, data_nascimento',
       [nova_senha, id]
     );
@@ -250,4 +251,5 @@ export async function atualizarSenha(req, res) {
     console.error('Erro ao atualizar senha:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
-}
+};
+

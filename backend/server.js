@@ -11,8 +11,8 @@ const PORT_FIXA = 3001; // Porta fixa
 
 
 // Importando as rotas
-const pessoaRoutes = require('../routes/pessoaRoutes');
-const loginRoutes = require('../routes/loginRoutes');
+const pessoaRoutes = require('./routes/pessoaRoutes');
+const loginRoutes = require('./routes/loginRoutes');
 // const produtoRoutes = require('./routes/produto');
 
 
