@@ -1,5 +1,10 @@
 const db = require('../database.js');
 
+// //chegou nessa rota, então o usuário está logado
+// exports.abrirMenu = (req, res) => {
+//   console.log('Rota abrir - Menu Acessando menu.html');
+//   res.sendFile(path.join(__dirname, '../frontend/menu.html'));
+// };
 
 // Funções do controller
 exports.listarPessoas = async (req, res) => {

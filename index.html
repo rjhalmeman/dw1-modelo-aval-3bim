@@ -29,7 +29,11 @@
 
     async function testeRota() {
       try {
-        const res = await fetch(API_BASE_URL + '/login');
+        const res = await fetch(API_BASE_URL + '/menu/abrirMenu', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include'
+        });
         const data = await res.json();
         alert("Resposta do servidor: " + JSON.stringify(data));
       } catch (error) {

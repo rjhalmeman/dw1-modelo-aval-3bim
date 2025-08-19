@@ -18,6 +18,7 @@ const PORT_FIXA = 3001; // Porta fixa
 // Importando as rotas
 const pessoaRoutes = require('./routes/pessoaRoutes');
 const loginRoutes = require('./routes/loginRoutes');
+const menuRoutes = require('./routes/menuRoutes');
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -69,7 +70,7 @@ app.use((err, req, res, next) => {
 // Rotas
 app.use('/pessoas', pessoaRoutes);
 app.use('/login', loginRoutes);
-app.use('/menu', express.static(path.join(__dirname, '../frontend/menu.html')));
+app.use('/menu', menuRoutes);
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

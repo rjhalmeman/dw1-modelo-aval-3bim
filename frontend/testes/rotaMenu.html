@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Rota abrirMenu</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <button onclick="testarAbrirMenu()">Testar abrirMenu</button>
+
+    <script>
+        // Substitua pela URL base da sua API
+        const API_BASE_URL = 'http://localhost:3001';
+
+        async function testarAbrirMenu() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/menu/abrirMenu`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include'
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    alert(`Sucesso! Resposta: ${JSON.stringify(data)}`);
+                } else {
+                    const error = await response.text();
+                    alert(`Erro: ${error}`);
+                }
+            } catch (error) {
+                alert(`Falha na requisição: ${error.message}`);
+            }
+        }
+    </script>
+</body>
+</html>
