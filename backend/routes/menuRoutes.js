@@ -5,6 +5,7 @@ const menuController = require('../controllers/menuController');
 // Rotas de autenticação
 router.post('/abrirMenu', menuController.abrirMenu);
 router.post('/inicio', menuController.inicio);
+router.post('/logout', menuController.logout);
 
 
 

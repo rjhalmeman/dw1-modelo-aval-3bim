@@ -19,3 +19,5 @@ app.get('/usuarioLogado', (req, res) => {
         res.json({ status: 'nao_logado' });
     }
 });
+
+
