@@ -3,14 +3,10 @@
 const path = require('path');
 
 exports.abrirMenu = (req, res) => {
-    console.log('Rota abrir - Menu Acessando menu.html');
-    res.sendFile(path.join(__dirname, '../frontend/menu.html'));
+    console.log('Rota / - Menu Acessando menu.html');
+    res.sendFile(path.join(__dirname, '../../frontend/menu.html'));
 };
 
-exports.inicio = (req, res) => {
-    // Implementação da rota inicio
-    res.send('Rota inicio');
-};
 
 exports.logout = (req, res) => {
     // Implementação da rota logout
