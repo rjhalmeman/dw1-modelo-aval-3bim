@@ -10,7 +10,7 @@ router.post('/verificarSenha', loginController.verificarSenha);
 router.get('/', loginController.listarPessoas);
 router.post('/', loginController.criarPessoa);
 router.get('/:id', loginController.obterPessoa);
-router.put('/:id', loginController.atualizarPessoa);
-router.delete('/:id', loginController.deletarPessoa);
+// router.put('/:id', loginController.atualizarPessoa);
+// router.delete('/:id', loginController.deletarPessoa);
 
 module.exports = router;
