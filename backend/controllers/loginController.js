@@ -1,10 +1,16 @@
 const db = require('../database.js');
 
-// //chegou nessa rota, então o usuário está logado
-// exports.abrirMenu = (req, res) => {
-//   console.log('Rota abrir - Menu Acessando menu.html');
-//   res.sendFile(path.join(__dirname, '../frontend/menu.html'));
-// };
+exports.verificaSeUsuarioEstaLogado = (req, res) => {
+  console.log('loginController - Acessando rota /verificaSeUsuarioEstaLogado');
+  const nome = req.cookies.usuarioLogado;
+  console.log('Cookie usuarioLogado:', nome);
+  if (nome) {
+      res.json({ status: 'ok', nome });
+  } else {
+      res.json({ status: 'nao_logado' });
+  }
+} 
+
 
 // Funções do controller
 exports.listarPessoas = async (req, res) => {
@@ -81,6 +87,7 @@ exports.verificarSenha = async (req, res) => {
     }
 
     // 3. Define cookie
+
     res.cookie('usuarioLogado', nome_pessoa, {
       sameSite: 'None',
       secure: true,
@@ -89,6 +96,9 @@ exports.verificarSenha = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000, // 1 dia
     });
 
+    console.log("Cookie 'usuarioLogado' definido com sucesso");
+
+    // 4. Retorna dados para o frontend (login.html)
     return res.json({
       status: 'ok',
       nome: nome_pessoa,
@@ -167,7 +177,7 @@ exports.obterPessoa = async (req, res) => {
     const id = parseInt(req.params.id);
 
     if (isNaN(id)) {
-      return res.status(400).json({ error: 'ID deve ser um número válido' });
+      return res.status(400).json({ error: 'loginController-obterPessoa - ID deve ser um número válido' });
     }
 
     const result = await db.query(
