@@ -1,6 +1,6 @@
 {
-  "name": "api-pessoas-mysql",
-  "version": "1.0.0",
+  "name": "api-pessoas-mysql",  
+  "version": "1.0.0",  
   "description": "API REST para gerenciamento de pessoas com MySQL",
   "main": "server.js",
   "scripts": {
