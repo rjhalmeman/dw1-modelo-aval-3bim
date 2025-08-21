@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Verificar status do cookie</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 720px; margin: 2rem auto; padding: 0 1rem; }
+    button { padding: .6rem 1rem; border: 0; border-radius: .5rem; cursor: pointer; background: #0ea5e9; color: white; }
+    pre { background: #0f172a; color: #e2e8f0; padding: 1rem; border-radius: .5rem; overflow: auto; }
+    .ok { color: #16a34a; font-weight: 700; }
+    .fail { color: #dc2626; font-weight: 700; }
+  </style>
+</head>
+<body>
+  <h1>Status do cookie <code>usuarioLogado</code></h1>
+  <p>Esse teste vai chamar a rota do backend que verifica o cookie <code>httpOnly</code>.</p>
+
+  <button id="check">Verificar se usuário está logado</button>
+
+  <h2>Resultado</h2>
+  <pre id="output">Clique no botão acima…</pre>
+
+  <script>
+    async function checkLogin() {
+      const outEl = document.getElementById('output');
+      outEl.textContent = 'Verificando…';
+
+      try {
+        // Ajuste a URL se o backend estiver em outra porta
+        const url = 'http://localhost:3001/verificaSeUsuarioEstaLogado';
+
+        const res = await fetch(url, {
+          method: 'GET',
+          credentials: 'include' // <- ESSENCIAL para enviar cookies httpOnly
+        });
+
+        const data = await res.json();
+
+        if (data.status === 'ok') {
+          outEl.innerHTML = `✅ Usuário logado: <strong>${data.nome}</strong>`;
+        } else {
+          outEl.innerHTML = `❌ Não logado`;
+        }
+
+      } catch (err) {
+        outEl.textContent = 'Erro na requisição: ' + err.message;
+      }
+    }
+
+    document.getElementById('check').addEventListener('click', checkLogin);
+  </script>
+</body>
+</html>
