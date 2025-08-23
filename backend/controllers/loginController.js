@@ -5,11 +5,11 @@ exports.verificaSeUsuarioEstaLogado = (req, res) => {
   const nome = req.cookies.usuarioLogado;
   console.log('Cookie usuarioLogado:', nome);
   if (nome) {
-      res.json({ status: 'ok', nome });
+    res.json({ status: 'ok', nome });
   } else {
-      res.json({ status: 'nao_logado' });
+    res.json({ status: 'nao_logado' });
   }
-} 
+}
 
 
 // Funções do controller
