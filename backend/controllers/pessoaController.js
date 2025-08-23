@@ -1,6 +1,16 @@
 //import { query } from '../database.js';
 const { query } = require('../database');
 // Funções do controller
+
+const path = require('path');
+
+exports.abrirCrudPessoa = (req, res) => {
+      console.log('pessoaController - Rota /abrirCrudPessoa - abrir o crudPessoa');
+      res.sendFile(path.join(__dirname, '../../frontend/pessoa/pessoa.html'));
+}
+
+
+
 exports.listarPessoas = async (req, res) => {
   try {
     const result = await query('SELECT * FROM pessoa ORDER BY id_pessoa');

@@ -3,6 +3,7 @@ const router = express.Router();
 const pessoaController = require('../controllers/pessoaController');
 
 // CRUD de Pessoas
+router.get('/', pessoaController.abrirCrudPessoa);
 router.get('/', pessoaController.listarPessoas);
 router.post('/', pessoaController.criarPessoa);
 router.get('/:id', pessoaController.obterPessoa);
