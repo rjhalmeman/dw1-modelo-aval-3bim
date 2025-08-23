@@ -275,12 +275,7 @@ function renderizarTabelaPessoas(pessoas) {
                     <td>${pessoa.nome_pessoa}</td>
                     <td>${pessoa.email_pessoa}</td>
                     <td>${pessoa.primeiro_acesso_pessoa ? 'Sim' : 'Não'}</td>
-                    <td>${formatarData(pessoa.data_nascimento)}</td>
-                    <td>
-                        <button class="btn-small btn-secondary" onclick="selecionarPessoa(${pessoa.id_pessoa})">
-                            Editar
-                        </button>
-                    </td>
+                    <td>${formatarData(pessoa.data_nascimento)}</td>                 
                 `;
         pessoasTableBody.appendChild(row);
     });

@@ -4,7 +4,7 @@ const { query } = require('../database');
 exports.listarPessoas = async (req, res) => {
   try {
     const result = await query('SELECT * FROM pessoa ORDER BY id_pessoa');
-    console.log('Resultado do SELECT:', result.rows);//verifica se está retornando algo
+    // console.log('Resultado do SELECT:', result.rows);//verifica se está retornando algo
     res.json(result.rows);
   } catch (error) {
     console.error('Erro ao listar pessoas:', error);
@@ -88,10 +88,6 @@ exports.atualizarPessoa = async (req, res) => {
     const id = parseInt(req.params.id);
     const { nome_pessoa, email_pessoa, senha_pessoa, primeiro_acesso_pessoa, data_nascimento } = req.body;
 
-    if (isNaN(id)) {
-      return res.status(400).json({ error: 'ID deve ser um número válido' });
-    }
-
     // Validação de email se fornecido
     if (email_pessoa) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -102,15 +98,6 @@ exports.atualizarPessoa = async (req, res) => {
       }
     }
 
-    // Verifica se a pessoa existe
-    const existingPersonResult = await query(
-      'SELECT * FROM pessoa WHERE id_pessoa = $1',
-      [id]
-    );
-
-    if (existingPersonResult.rows.length === 0) {
-      return res.status(404).json({ error: 'Pessoa não encontrada' });
-    }
 
     // Constrói a query de atualização dinamicamente para campos não nulos
     const currentPerson = existingPersonResult.rows[0];
@@ -146,20 +133,6 @@ exports.atualizarPessoa = async (req, res) => {
 exports.deletarPessoa = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-
-    if (isNaN(id)) {
-      return res.status(400).json({ error: 'ID deve ser um número válido' });
-    }
-
-    // Verifica se a pessoa existe
-    const existingPersonResult = await query(
-      'SELECT * FROM pessoa WHERE id_pessoa = $1',
-      [id]
-    );
-
-    if (existingPersonResult.rows.length === 0) {
-      return res.status(404).json({ error: 'Pessoa não encontrada' });
-    }
 
     // Deleta a pessoa (as constraints CASCADE cuidarão das dependências)
     await query(
