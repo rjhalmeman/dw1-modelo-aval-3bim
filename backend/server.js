@@ -12,6 +12,14 @@ const db = require('./database'); // Ajuste o caminho conforme necessário
 const HOST = 'localhost'; // Para desenvolvimento local
 const PORT_FIXA = 3001; // Porta fixa
 
+// serve a pasta frontend como arquivos estáticos
+
+// serve a pasta frontend como arquivos estáticos
+
+const caminhoFrontend = path.join(__dirname, '../frontend');
+console.log('Caminho frontend:', caminhoFrontend);
+
+app.use(express.static(caminhoFrontend));
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -73,6 +81,8 @@ app.use((err, req, res, next) => {
 app.use('/pessoas', pessoaRoutes);
 app.use('/login', loginRoutes);
 app.use('/menu', menuRoutes);
+
+
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -144,6 +154,7 @@ app.use('*', (req, res) => {
 const startServer = async () => {
   try {
     // Testar conexão com o banco antes de iniciar o servidor
+    console.log(caminhoFrontend);
     console.log('Testando conexão com PostgreSQL...');
     const connectionTest = await db.testConnection();
 

@@ -5,11 +5,9 @@ const { query } = require('../database');
 const path = require('path');
 
 exports.abrirCrudPessoa = (req, res) => {
-      console.log('pessoaController - Rota /abrirCrudPessoa - abrir o crudPessoa');
-      res.sendFile(path.join(__dirname, '../../frontend/pessoa/pessoa.html'));
+  console.log('pessoaController - Rota /abrirCrudPessoa - abrir o crudPessoa');
+  res.sendFile(path.join(__dirname, '../../frontend/pessoa/pessoa.html'));
 }
-
-
 
 exports.listarPessoas = async (req, res) => {
   try {
@@ -107,7 +105,15 @@ exports.atualizarPessoa = async (req, res) => {
         });
       }
     }
+    // Verifica se a pessoa existe
+    const existingPersonResult = await query(
+      'SELECT * FROM pessoa WHERE id_pessoa = $1',
+      [id]
+    );
 
+    if (existingPersonResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Pessoa não encontrada' });
+    }
 
     // Constrói a query de atualização dinamicamente para campos não nulos
     const currentPerson = existingPersonResult.rows[0];
@@ -143,6 +149,15 @@ exports.atualizarPessoa = async (req, res) => {
 exports.deletarPessoa = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
+    // Verifica se a pessoa existe
+    const existingPersonResult = await query(
+      'SELECT * FROM pessoa WHERE id_pessoa = $1',
+      [id]
+    );
+
+    if (existingPersonResult.rows.length === 0) {
+      return res.status(404).json({ error: 'Pessoa não encontrada' });
+    }
 
     // Deleta a pessoa (as constraints CASCADE cuidarão das dependências)
     await query(
