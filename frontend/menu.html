@@ -4,41 +4,67 @@
 <head>
   <meta charset="UTF-8">
   <title>Menu Principal</title>
+  <link rel="stylesheet" href="menu.css">
 </head>
 
 <body>
-  <h2 id="boasVindas">.</h2>
-  <nav>
-    <ul>
-      <li><a href="http://localhost:3001/pessoas/abrirCrudPessoa">Crud Pessoa</a></li>
-      <!-- <li><a href="http://localhost:3001/crudQuestao">Crud Questão</a></li>
-      <li><a href="http://localhost:3001/crudAvaliacao">Crud Avaliação</a></li> -->
-    </ul>
-  </nav>
+  <header>
+    <h1>A Simple Dropdown Menu</h1>
+    <nav class="nav">
+      <ul class="nav__menu">
+        <li class="nav__menu-item"><a href="#">Home</a></li>
 
+        <li class="nav__menu-item">
+          <a href="#">Cadastros</a>
+          <ul class="nav__submenu">
+            <li class="nav__submenu-item"><a href="http://localhost:3001/pessoas/abrirCrudPessoa">Crud Pessoa</a></li>
+            <li class="nav__submenu-item"><a href="#">Web Development</a></li>
+            <li class="nav__submenu-item"><a href="#">Web Hosting</a></li>
+          </ul>
+        </li>
 
-  <button onclick="logout()">Sair</button>
+        <li class="nav__menu-item">
+          <a href="#">About</a>
+          <ul class="nav__submenu">
+            <li class="nav__submenu-item"><a href="#">Our Company</a></li>
+            <li class="nav__submenu-item"><a href="#">Our Team</a></li>
+            <li class="nav__submenu-item"><a href="#">Our Reach</a></li>
+          </ul>
+        </li>
+        
+        <li class="nav__menu-item"><a href="#">Blog</a></li>
+        <li class="nav__menu-item"><a href="#">Contact</a></li>
+        <h3 class="nav__menu-item" id="boasVindas">usuario</h3>
+        <input type="button" onclick="logout()" value="Sair">
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    
+    <section>
+     <p>section main....</p>
+    </section>
+    
+  </main>
+
+  <footer>
+    <p>&copy; 2025 - Meu Site</p>
+  </footer>
 
   <script>
-    const API_BASE_URL = 'http://localhost:3001'; // Define  o host e a porta do servidor
+    const API_BASE_URL = 'http://localhost:3001';
     let ehProfessor = false;
 
-    async function usuarioAutorizado() {     
-      //veririca se o usuário está logado
+    async function usuarioAutorizado() {
       const rota = API_BASE_URL + '/login/verificaSeUsuarioEstaLogado';
-      alert('Rota para verificar usuário logado:' + rota);
-
-      const res = await fetch(rota, {
-        credentials: 'include'
-      });
+      const res = await fetch(rota, { credentials: 'include' });
       const data = await res.json();
-          alert("Dados do usuário: " + JSON.stringify(data));  
 
       if (data.status === 'ok') {
-        document.getElementById('boasVindas').innerText = `${data.nome} - ${data.mnemonicoProfessor ? ` Professor: ${data.mnemonicoProfessor}` : ''}`;
-        if (data.mnemonicoProfessor) {
-          ehProfessor = true
-        }
+        document.getElementById('boasVindas').innerText =
+          `${data.nome} - ${data.mnemonicoProfessor ? `Professor: ${data.mnemonicoProfessor}` : ''}`;
+        if (data.mnemonicoProfessor) ehProfessor = true;
       } else {
         alert("Você precisa fazer login.");
         window.location.href = "./login/login.html";
@@ -52,8 +78,6 @@
       });
       window.location.href = "http://localhost:3005/inicio";
     }
-
-    //usuarioAutorizado();
   </script>
 </body>
 
