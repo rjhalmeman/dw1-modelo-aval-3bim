@@ -9,7 +9,15 @@
 
 <body>
   <header>
-    <h1>A Simple Dropdown Menu</h1>
+    <div class="topo">
+      <h3>Menu Principal</h3>
+      <select id="oUsuario" onchange="handleUserAction(this.value)">
+        <option value="">usuario</option>
+        <option value="gerenciar-conta">Gerenciar Conta</option>
+        <option value="sair">Sair</option>
+      </select>
+    </div>
+
     <nav class="nav">
       <ul class="nav__menu">
         <li class="nav__menu-item"><a href="#">Home</a></li>
@@ -31,31 +39,42 @@
             <li class="nav__submenu-item"><a href="#">Our Reach</a></li>
           </ul>
         </li>
-        
+
         <li class="nav__menu-item"><a href="#">Blog</a></li>
         <li class="nav__menu-item"><a href="#">Contact</a></li>
-        <li class="nav__menu-item" id="oUsuario">usuario</li>
-        <li class="nav__menu-item" id="sair" onclick="logout()" >Sair</li>
-        <!-- <input type="button" onclick="logout()" value="Sair"> -->
+
       </ul>
     </nav>
   </header>
 
   <main>
-    
+
     <section>
-     <p>section main....</p>
+      <p>section main....</p>
     </section>
-    
+
   </main>
 
   <footer>
     <p>&copy; 2025 - Meu Site</p>
   </footer>
 
+  <script src="./menu.js"></script>
   <script>
     const API_BASE_URL = 'http://localhost:3001';
     let ehProfessor = false;
+
+    nomeUsuario();
+
+    //essa função só existe para teste inicial
+    function nomeUsuario() {
+      const combobox = document.getElementById("oUsuario");
+      const primeiraOpcao = combobox.options[0];
+      primeiraOpcao.text = "Berola da Silva";
+    }
+
+    // Chame a função quando a página carregar
+    window.onload = nomeUsuario;
 
     async function usuarioAutorizado() {
       const rota = API_BASE_URL + '/login/verificaSeUsuarioEstaLogado';
