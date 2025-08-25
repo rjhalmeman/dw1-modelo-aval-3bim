@@ -7,6 +7,7 @@ current_folder=$(basename "$PWD")
 default_remote="https://github.com/rjhalmeman/$current_folder"
 
 clear
+git status
 echo ""
 echo $default_remote
 echo
