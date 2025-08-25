@@ -17,9 +17,9 @@
         <li class="nav__menu-item">
           <a href="#">Cadastros</a>
           <ul class="nav__submenu">
-            <li class="nav__submenu-item"><a href="http://localhost:3001/pessoas/abrirCrudPessoa">Crud Pessoa</a></li>
-            <li class="nav__submenu-item"><a href="#">Web Development</a></li>
-            <li class="nav__submenu-item"><a href="#">Web Hosting</a></li>
+            <li class="nav__submenu-item"><a href="http://localhost:3001/pessoas/abrirCrudPessoa">Pessoa</a></li>
+            <li class="nav__submenu-item"><a href="#">Questão</a></li>
+            <li class="nav__submenu-item"><a href="#">Avaliação</a></li>
           </ul>
         </li>
 
@@ -34,8 +34,9 @@
         
         <li class="nav__menu-item"><a href="#">Blog</a></li>
         <li class="nav__menu-item"><a href="#">Contact</a></li>
-        <h3 class="nav__menu-item" id="boasVindas">usuario</h3>
-        <input type="button" onclick="logout()" value="Sair">
+        <li class="nav__menu-item" id="oUsuario">usuario</li>
+        <li class="nav__menu-item" id="sair" onclick="logout()" >Sair</li>
+        <!-- <input type="button" onclick="logout()" value="Sair"> -->
       </ul>
     </nav>
   </header>
@@ -78,6 +79,8 @@
       });
       window.location.href = "http://localhost:3005/inicio";
     }
+
+    // usuarioAutorizado();
   </script>
 </body>
 
