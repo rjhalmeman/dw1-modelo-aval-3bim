@@ -22,18 +22,20 @@ fi
 # Adiciona todas as alterações ao índice do Git
 git add .
 
-# Obtém a data e hora atual e formata para o formato desejado (por exemplo, YYYY-MM-DD HH:MM:SS)
+# Obtém a data e hora atual e formata para o formato desejado
 timestamp=$(date +"%d/%m/%Y - %H:%M:%S")
 
-# Realiza um commit com a mensagem contendo a data e hora
-git commit -m "$timestamp"
-
-# Verifica se um argumento foi fornecido
+# Verifica se foi fornecido um parâmetro adicional para a mensagem de commit
 if [ $# -eq 0 ]; then
-    # Faz o push para o repositório remoto padrão no GitHub
-    git push "$default_remote"
+    # Se não houver parâmetros, usa apenas a data/hora
+    commit_message="$timestamp"
 else
-    # Faz o push para o repositório remoto fornecido no GitHub
-    git push "$1" "$default_remote"
+    # Se houver parâmetros, concatena a data/hora com a mensagem fornecida
+    commit_message="$timestamp - $*"
 fi
 
+# Realiza um commit com a mensagem
+git commit -m "$commit_message"
+
+# Faz o push para o repositório remoto padrão no GitHub
+git push "$default_remote"
