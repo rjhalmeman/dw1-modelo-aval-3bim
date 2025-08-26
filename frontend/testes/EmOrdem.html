@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <title>Sorteio de Conjuntos</title>
+</head>
+<body>
+  <h1>Sorteio de Conjuntos Numéricos</h1>
+
+  <label for="min">Mínimo:</label>
+  <input id="min" type="number" value="1">
+  <label for="max">Máximo:</label>
+  <input id="max" type="number" value="39">
+  <br><br>
+
+  <label for="qtdConjuntos">Quantidade de conjuntos:</label>
+  <input id="qtdConjuntos" type="number" value="3" min="1">
+  <label for="tamConjunto">Tamanho de cada conjunto:</label>
+  <input id="tamConjunto" type="number" value="13" min="1">
+  <br><br>
+
+  <label>
+    <input id="evitarGlobal" type="checkbox">
+    Evitar repetição entre conjuntos (global)
+  </label>
+  <br><br>
+
+  <button id="btnSortear">Sortear</button>
+  <button id="btnLimpar">Limpar</button>
+
+  <h2>Resultado</h2>
+  <pre id="saida"></pre>
+
+  <script>
+    function inteiroAleatorio(min, max) {
+      // retorna inteiro no intervalo [min, max]
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function sortearConjunto(min, max, tamanho, usadosGlobais = null) {
+      const conjunto = new Set();
+      const totalDisponivel = (max - min + 1) - (usadosGlobais ? usadosGlobais.size : 0);
+      if (tamanho > totalDisponivel) {
+        throw new Error("Tamanho do conjunto maior que a quantidade de números disponíveis.");
+      }
+
+      while (conjunto.size < tamanho) {
+        const n = inteiroAleatorio(min, max);
+        const jaUsadoGlobal = usadosGlobais && usadosGlobais.has(n);
+        if (!jaUsadoGlobal && !conjunto.has(n)) {
+          conjunto.add(n);
+        }
+      }
+      return Array.from(conjunto).sort((a, b) => a - b);
+    }
+
+    function sortear() {
+      const saida = document.getElementById('saida');
+      saida.textContent = ""; // limpa
+
+      const min = parseInt(document.getElementById('min').value, 10);
+      const max = parseInt(document.getElementById('max').value, 10);
+      const qtdConjuntos = parseInt(document.getElementById('qtdConjuntos').value, 10);
+      const tamConjunto = parseInt(document.getElementById('tamConjunto').value, 10);
+      const evitarGlobal = document.getElementById('evitarGlobal').checked;
+
+      // validações básicas
+      if (Number.isNaN(min) || Number.isNaN(max) || Number.isNaN(qtdConjuntos) || Number.isNaN(tamConjunto)) {
+        saida.textContent = "Preencha todos os campos com números válidos.";
+        return;
+      }
+      if (min > max) {
+        saida.textContent = "O valor mínimo deve ser menor ou igual ao máximo.";
+        return;
+      }
+      if (tamConjunto < 1 || qtdConjuntos < 1) {
+        saida.textContent = "Quantidade de conjuntos e tamanho devem ser pelo menos 1.";
+        return;
+      }
+      const tamanhoIntervalo = max - min + 1;
+      if (tamConjunto > tamanhoIntervalo) {
+        saida.textContent = "O tamanho de cada conjunto não pode exceder a amplitude do intervalo.";
+        return;
+      }
+      if (evitarGlobal && (qtdConjuntos * tamConjunto > tamanhoIntervalo)) {
+        saida.textContent = "Com 'evitar repetição entre conjuntos' ligado, a soma total de números não pode exceder o intervalo.";
+        return;
+      }
+
+      try {
+        const usadosGlobais = evitarGlobal ? new Set() : null;
+        let texto = "";
+        for (let i = 1; i <= qtdConjuntos; i++) {
+          const conj = sortearConjunto(min, max, tamConjunto, usadosGlobais);
+          if (usadosGlobais) {
+            for (const n of conj) usadosGlobais.add(n);
+          }
+          texto += `Conjunto ${i}: ${conj.join(", ")}\n`;
+        }
+        saida.textContent = texto.trimEnd();
+      } catch (e) {
+        saida.textContent = "Erro: " + e.message;
+      }
+    }
+
+    function limpar() {
+      document.getElementById('saida').textContent = "";
+    }
+
+    document.getElementById('btnSortear').addEventListener('click', sortear);
+    document.getElementById('btnLimpar').addEventListener('click', limpar);
+  </script>
+</body>
+</html>
