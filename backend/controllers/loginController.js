@@ -2,8 +2,9 @@ const db = require('../database.js');
 
 exports.verificaSeUsuarioEstaLogado = (req, res) => {
   console.log('loginController - Acessando rota /verificaSeUsuarioEstaLogado');
-  const nome = req.cookies.usuarioLogado;
+  let nome = req.cookies.usuarioLogado;
   console.log('Cookie usuarioLogado:', nome);
+  nome = "Berola da silva"; /////////// isso é um teste, apagar depois
   if (nome) {
     res.json({ status: 'ok', nome });
   } else {
