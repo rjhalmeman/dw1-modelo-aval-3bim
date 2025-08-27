@@ -71,17 +71,9 @@ exports.obterProfessor = async (req, res) => {
 exports.atualizarProfessor = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const { nome_professor, email_professor, senha_professor, primeiro_acesso_professor, data_nascimento } = req.body;
+    const { mnemonico_professor,departamento_professor} = req.body;
 
-    // Validação de email se fornecido
-    if (email_professor) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email_professor)) {
-        return res.status(400).json({
-          error: 'Formato de email inválido'
-        });
-      }
-    }
+    
     // Verifica se a professor existe
     const existingPersonResult = await query(
       'SELECT * FROM professor WHERE id_professor = $1',
@@ -95,30 +87,20 @@ exports.atualizarProfessor = async (req, res) => {
     // Constrói a query de atualização dinamicamente para campos não nulos
     const currentPerson = existingPersonResult.rows[0];
     const updatedFields = {
-      nome_professor: nome_professor !== undefined ? nome_professor : currentPerson.nome_professor,
-      email_professor: email_professor !== undefined ? email_professor : currentPerson.email_professor,
-      senha_professor: senha_professor !== undefined ? senha_professor : currentPerson.senha_professor,
-      primeiro_acesso_professor: primeiro_acesso_professor !== undefined ? primeiro_acesso_professor : currentPerson.primeiro_acesso_professor,
-      data_nascimento: data_nascimento !== undefined ? data_nascimento : currentPerson.data_nascimento
+      mnemonico_professor: mnemonico_professor,
+      departamento_professor: departamento_professor 
     };
 
     // Atualiza a professor
     const updateResult = await query(
-      'UPDATE professor SET nome_professor = $1, email_professor = $2, senha_professor = $3, primeiro_acesso_professor = $4, data_nascimento = $5 WHERE id_professor = $6 RETURNING *',
-      [updatedFields.nome_professor, updatedFields.email_professor, updatedFields.senha_professor, updatedFields.primeiro_acesso_professor, updatedFields.data_nascimento, id]
+      'UPDATE professor SET mnemonico_professor = $1, email_professor = $2 WHERE id_professor = $3 RETURNING *',
+      [updatedFields.nome_professor, updatedFields.departamento_professor, id]
     );
 
     res.json(updateResult.rows[0]);
   } catch (error) {
     console.error('Erro ao atualizar professor:', error);
-
-    // Verifica se é erro de email duplicado
-    if (error.code === '23505' && error.constraint === 'professor_email_professor_key') {
-      return res.status(400).json({
-        error: 'Email já está em uso por outra professor'
-      });
-    }
-
+   
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 }
