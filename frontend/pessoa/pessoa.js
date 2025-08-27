@@ -84,27 +84,29 @@ function converterDataParaISO(dataString) {
 async function funcaoEhProfessor(pessoaId) {
     try {
         const response = await fetch(`${API_BASE_URL}/professor/${pessoaId}`);
-       // alert('Response status: ' + response.status);
 
-        if (response.status === 404) {           
-            return false;
+        if (response.status === 404) {
+            return { ehProfessor: false };
         }
-        if (response.status === 200) {           
-            return true;
+
+        if (response.status === 200) {
+            const professorData = await response.json();
+            return {
+                ehProfessor: true, // CORREÇÃO: era "pessoa_id_pessoa: true"
+                mnemonico: professorData.mnemonico_professor, // CORREÇÃO: usar o nome correto do campo
+                departamento: professorData.departamento_professor // CORREÇÃO: usar o nome correto do campo
+            };
         }
 
         if (!response.ok) {
-            // Lida com outros erros, como 400 ou 500
             const errorData = await response.json();
-            // console.error('Erro na requisição:', errorData.error);
-            // mostrarMensagem('Erro ao verificar se é professor.', 'error');
-            return false;
+            console.error('Erro na requisição:', errorData.error);
+            return { ehProfessor: false };
         }
 
     } catch (error) {
-        // console.error('Erro ao verificar se é professor:', error);
-        // mostrarMensagem('Erro ao verificar se é professor.', 'error');
-        return false;
+        console.error('Erro ao verificar se é professor:', error);
+        return { ehProfessor: false };
     }
 }
 
@@ -112,19 +114,15 @@ async function funcaoEhProfessor(pessoaId) {
 
 // Função para buscar pessoa por ID
 async function buscarPessoa() {
-    let idProfessor = 0;
     const id = searchId.value.trim();
     if (!id) {
         mostrarMensagem('Digite um ID para buscar', 'warning');
         return;
     }
 
-    let ehProfessor = await funcaoEhProfessor(id);
-   // alert('É professor? ' + ehProfessor);
 
 
     bloquearCampos(false);
-    //focus no campo searchId
     searchId.focus();
     try {
         const response = await fetch(`${API_BASE_URL}/pessoas/${id}`);
@@ -135,11 +133,6 @@ async function buscarPessoa() {
 
             mostrarBotoes(true, false, true, true, false, false);// mostrarBotoes(btBuscar, btIncluir, btAlterar, btExcluir, btSalvar, btCancelar)
             mostrarMensagem('Pessoa encontrada!', 'success');
-            //procurar se essa pessoa é professor
-            idProfessor = pessoa.id_pessoa;
-
-            document.getElementById('professorCheckbox').checked = ehProfessor;
-
 
         } else if (response.status === 404) {
             limparFormulario();
@@ -154,6 +147,22 @@ async function buscarPessoa() {
     } catch (error) {
         console.error('Erro:', error);
         mostrarMensagem('Erro ao buscar pessoa', 'error');
+    }
+
+    // Verifica se a pessoa é professor
+    const oProfessor = await funcaoEhProfessor(id);
+
+    if (oProfessor.ehProfessor) {
+       // alert('É professor: ' + oProfessor.ehProfessor + ' - ' + oProfessor.mnemonico + ' - ' + oProfessor.departamento);
+
+        document.getElementById('checkboxProfessor').checked = true;
+        document.getElementById('mnemonicoProfessor').value = oProfessor.mnemonico;
+        document.getElementById('departamentoProfessor').value = oProfessor.departamento;
+    } else {
+        // Não é professor
+        document.getElementById('checkboxProfessor').checked = false;
+        document.getElementById('mnemonicoProfessor').value = '';
+        document.getElementById('departamentoProfessor').value = '';
     }
 }
 

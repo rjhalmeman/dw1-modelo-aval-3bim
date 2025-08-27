@@ -42,7 +42,7 @@ exports.criarProfessor = async (req, res) => {
 
 exports.obterProfessor = async (req, res) => {
   console.log('Obtendo professor com ID:', req.params.id);
-  
+
   try {
     const id = parseInt(req.params.id);
 
@@ -59,7 +59,9 @@ exports.obterProfessor = async (req, res) => {
       return res.status(404).json({ error: 'Professor não encontrado' });
     }
 
-    res.json(result.rows[0]);
+    res.json(result.rows[0]); //achou o professor e retorna todos os dados do professor
+    //console.log('Professor encontrado:', result.rows[0]);
+
   } catch (error) {
     console.error('Erro ao obter professor:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
