@@ -81,13 +81,48 @@ function converterDataParaISO(dataString) {
     return new Date(dataString).toISOString();
 }
 
+async function funcaoEhProfessor(pessoaId) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/professor/${pessoaId}`);
+       // alert('Response status: ' + response.status);
+
+        if (response.status === 404) {           
+            return false;
+        }
+        if (response.status === 200) {           
+            return true;
+        }
+
+        if (!response.ok) {
+            // Lida com outros erros, como 400 ou 500
+            const errorData = await response.json();
+            // console.error('Erro na requisição:', errorData.error);
+            // mostrarMensagem('Erro ao verificar se é professor.', 'error');
+            return false;
+        }
+
+    } catch (error) {
+        // console.error('Erro ao verificar se é professor:', error);
+        // mostrarMensagem('Erro ao verificar se é professor.', 'error');
+        return false;
+    }
+}
+
+
+
 // Função para buscar pessoa por ID
 async function buscarPessoa() {
+    let idProfessor = 0;
     const id = searchId.value.trim();
     if (!id) {
         mostrarMensagem('Digite um ID para buscar', 'warning');
         return;
     }
+
+    let ehProfessor = await funcaoEhProfessor(id);
+   // alert('É professor? ' + ehProfessor);
+
+
     bloquearCampos(false);
     //focus no campo searchId
     searchId.focus();
@@ -100,6 +135,11 @@ async function buscarPessoa() {
 
             mostrarBotoes(true, false, true, true, false, false);// mostrarBotoes(btBuscar, btIncluir, btAlterar, btExcluir, btSalvar, btCancelar)
             mostrarMensagem('Pessoa encontrada!', 'success');
+            //procurar se essa pessoa é professor
+            idProfessor = pessoa.id_pessoa;
+
+            document.getElementById('professorCheckbox').checked = ehProfessor;
+
 
         } else if (response.status === 404) {
             limparFormulario();
