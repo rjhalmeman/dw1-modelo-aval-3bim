@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD - Questão</title>
+    <link rel="stylesheet" href="/questao/questao.css">
+</head>
+
+<body>
+    <header>
+        <h1>CRUD Questao</h1>
+    </header>
+
+    <main>
+        <section class="form-section">
+            <h2>Cadastro de Questão</h2>
+
+            <form id="questaoForm">
+                <div class="search-container">
+                    <label for="searchId">Buscar por ID:</label>
+                    <div class="search-input-group">
+                        <input type="number" id="searchId" placeholder="Digite o ID para buscar">
+                        <button type="button" id="btnBuscar">🔍 Buscar</button>
+
+                        <button type="button" id="btnIncluir" class="btn-primary">Incluir</button>
+                        <button type="button" id="btnAlterar" class="btn-secondary"
+                            style="display: none;">Alterar</button>
+                        <button type="button" id="btnExcluir" class="btn-danger" style="display: none;">Excluir</button>
+                        <button type="button" id="btnSalvar" class="btn-save" style="display: none;">Salvar</button>
+                        <button type="button" id="btnCancelar" class="btn-cancel">Cancelar</button>
+                    </div>
+                </div>
+
+                <fieldset id="formFields">
+                    <legend>Dados da Questão</legend>
+
+                    <div class="form-group">
+                        <label for="texto_questao">Texto:</label>
+                        <input type="text" id="texto_questao" name="texto_questao" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nota_maxima_questao">Nota máxima:</label>
+                        <input type="number" id="nota_maxima_questao" name="nota_maxima_questao" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="texto_complementar_questao">Texto complementar:</label>
+                        <input type="text" id="texto_complementar_questao" name="texto_complementar_questao" required>
+                    </div>
+
+                 
+                </fieldset>
+            </form>
+        </section>
+
+        <section class="list-section">
+            <div class="table-container">
+                <table id="questoesTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Texto</th>
+                            <th>Nota máxima</th>                          
+                            <th>Texto complementar</th>                          
+                        </tr>
+                    </thead>
+                    <tbody id="questoesTableBody">
+                        <!-- Dados serão carregados dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 CRUD Questao</p>
+    </footer>
+
+    <div id="messageContainer" class="message-container"></div>
+
+    <script src="/questao/questao.js" defer></script>
+
+</body>
+
+</html>

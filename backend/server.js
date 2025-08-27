@@ -25,6 +25,7 @@ app.use(express.static(caminhoFrontend));
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Importando as rotas
 const pessoaRoutes = require('./routes/pessoaRoutes');
+const questaoRoutes = require('./routes/questaoRoutes');
 const loginRoutes = require('./routes/loginRoutes');
 const menuRoutes = require('./routes/menuRoutes');
 
@@ -79,6 +80,7 @@ app.use((err, req, res, next) => {
 
 // Rotas
 app.use('/pessoas', pessoaRoutes);
+app.use('/questoes', questaoRoutes);
 app.use('/login', loginRoutes);
 app.use('/menu', menuRoutes);
 
