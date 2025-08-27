@@ -41,7 +41,7 @@ exports.criarProfessor = async (req, res) => {
 }
 
 exports.obterProfessor = async (req, res) => {
-  console.log('Obtendo professor com ID:', req.params.id);
+ // console.log('Obtendo professor com ID:', req.params.id);
 
   try {
     const id = parseInt(req.params.id);
