@@ -22,7 +22,6 @@ CREATE TABLE professor (
 -- Tabela avaliado
 CREATE TABLE avaliado (
   pessoa_id_pessoa INTEGER PRIMARY KEY,
-  tema_apresentado_avaliado VARCHAR(255) DEFAULT NULL
 );
 
 -- Tabela avaliador
