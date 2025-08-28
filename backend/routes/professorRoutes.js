@@ -4,7 +4,7 @@ const professorController = require('../controllers/professorController');
 
 // CRUD de Professors
 
-router.get('/abrirCrudProfessor', professorController.abrirCrudProfessor);
+
 router.get('/', professorController.listarProfessor);
 router.post('/', professorController.criarProfessor);
 router.get('/:id', professorController.obterProfessor);

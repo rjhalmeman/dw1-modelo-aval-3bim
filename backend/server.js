@@ -85,7 +85,8 @@ app.use('/questoes', questaoRoutes);
 const professorRoutes = require('./routes/professorRoutes');
 app.use('/professor', professorRoutes);
 
-
+const avaliadorRoutes = require('./routes/avaliadorRoutes');
+app.use('/avaliador', avaliadorRoutes);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

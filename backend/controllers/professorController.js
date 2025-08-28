@@ -4,10 +4,6 @@ const { query } = require('../database');
 
 const path = require('path');
 
-exports.abrirCrudProfessor = (req, res) => {
-  //  console.log('professorController - Rota /abrirCrudProfessor - abrir o crudProfessor');
-  res.sendFile(path.join(__dirname, '../../frontend/professor/professor.html'));
-}
 
 exports.listarProfessor = async (req, res) => {
   try {

@@ -43,7 +43,7 @@ function mostrarMensagem(texto, tipo = 'info') {
 function bloquearCampos(bloquearPrimeiro) {
     const inputs = document.querySelectorAll('input, select,checkbox'); // Seleciona todos os inputs e selects do DOCUMENTO
     inputs.forEach((input, index) => {
-       // console.log(`Input ${index}: ${input.name}, disabled: ${input.disabled}`);
+        // console.log(`Input ${index}: ${input.name}, disabled: ${input.disabled}`);
         if (index === 0) {
             // Primeiro elemento - bloqueia se bloquearPrimeiro for true, libera se for false
             input.disabled = bloquearPrimeiro;
@@ -59,6 +59,8 @@ function limparFormulario() {
     form.reset();
     document.getElementById('mnemonicoProfessor').value = '';
     document.getElementById('departamentoProfessor').value = '';
+    document.getElementById('avaliadorCheckbox').checked = false;
+    document.getElementById('avaliadoCheckbox').checked = false;
 }
 
 
@@ -123,8 +125,6 @@ async function buscarPessoa() {
         return;
     }
 
-
-
     bloquearCampos(false);
     searchId.focus();
     try {
@@ -157,7 +157,6 @@ async function buscarPessoa() {
 
     if (oProfessor.ehProfessor) {
         // alert('É professor: ' + oProfessor.ehProfessor + ' - ' + oProfessor.mnemonico + ' - ' + oProfessor.departamento);
-
         document.getElementById('checkboxProfessor').checked = true;
         document.getElementById('mnemonicoProfessor').value = oProfessor.mnemonico;
         document.getElementById('departamentoProfessor').value = oProfessor.departamento;
@@ -166,6 +165,19 @@ async function buscarPessoa() {
         document.getElementById('checkboxProfessor').checked = false;
         document.getElementById('mnemonicoProfessor').value = '';
         document.getElementById('departamentoProfessor').value = '';
+    }
+
+    //Verifica se a pessoa é avaliador
+    try {
+        const responseAvaliador = await fetch(`${API_BASE_URL}/avaliador/${id}`);
+        if (responseAvaliador.status === 200) {
+            document.getElementById('avaliadorCheckbox').checked = true;
+        } else {
+            document.getElementById('avaliadorCheckbox').checked = false;
+        }
+    } catch (error) {
+        console.error('Erro ao verificar se é avaliador:', error);
+        document.getElementById('avaliadorCheckbox').checked = false;
     }
 }
 
@@ -226,7 +238,7 @@ async function excluirPessoa() {
 }
 
 async function salvarOperacao() {
-    console.log('Operação:', operacao + ' - currentPersonId: ' + currentPersonId + ' - searchId: ' + searchId.value);
+    //console.log('Operação:', operacao + ' - currentPersonId: ' + currentPersonId + ' - searchId: ' + searchId.value);
 
     const formData = new FormData(form);
     const pessoa = {
@@ -247,6 +259,11 @@ async function salvarOperacao() {
         }
     }
 
+    //avaliar se é avaliador
+    if (document.getElementById('checkboxAvaliador').checked) {
+       //terminar essa parte
+       
+    }
     let response = null;
     let responsePessoa = null;
     try {
@@ -335,7 +352,7 @@ async function salvarOperacao() {
         }
 
         if (responsePessoa.ok && (operacao === 'incluir' || operacao === 'alterar')) {
-            const novaPessoa = await responsePessoa.json();
+
             mostrarMensagem('Operação ' + operacao + ' realizada com sucesso!', 'success');
             limparFormulario();
             carregarPessoas();
