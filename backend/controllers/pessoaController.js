@@ -5,7 +5,7 @@ const { query } = require('../database');
 const path = require('path');
 
 exports.abrirCrudPessoa = (req, res) => {
-  console.log('pessoaController - Rota /abrirCrudPessoa - abrir o crudPessoa');
+//  console.log('pessoaController - Rota /abrirCrudPessoa - abrir o crudPessoa');
   res.sendFile(path.join(__dirname, '../../frontend/pessoa/pessoa.html'));
 }
 

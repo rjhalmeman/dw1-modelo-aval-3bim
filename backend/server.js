@@ -22,15 +22,6 @@ console.log('Caminho frontend:', caminhoFrontend);
 app.use(express.static(caminhoFrontend));
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Importando as rotas
-const pessoaRoutes = require('./routes/pessoaRoutes');
-const questaoRoutes = require('./routes/questaoRoutes');
-const loginRoutes = require('./routes/loginRoutes');
-const menuRoutes = require('./routes/menuRoutes');
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 
 app.use(cookieParser());
 
@@ -75,15 +66,24 @@ app.use((err, req, res, next) => {
   }
   next(err);
 });
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-// Rotas
-app.use('/pessoas', pessoaRoutes);
-app.use('/questoes', questaoRoutes);
+// só mexa nessa parte
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Importando as rotas
+const loginRoutes = require('./routes/loginRoutes');
 app.use('/login', loginRoutes);
+
+const menuRoutes = require('./routes/menuRoutes');
 app.use('/menu', menuRoutes);
 
+const pessoaRoutes = require('./routes/pessoaRoutes');
+app.use('/pessoas', pessoaRoutes);
+
+const questaoRoutes = require('./routes/questaoRoutes');
+app.use('/questoes', questaoRoutes);
+
+const professorRoutes = require('./routes/professorRoutes');
+app.use('/professor', professorRoutes);
 
 
 

@@ -41,8 +41,9 @@ function mostrarMensagem(texto, tipo = 'info') {
 }
 
 function bloquearCampos(bloquearPrimeiro) {
-    const inputs = form.querySelectorAll('input, select');
+    const inputs = document.querySelectorAll('input, select,checkbox'); // Seleciona todos os inputs e selects do DOCUMENTO
     inputs.forEach((input, index) => {
+       // console.log(`Input ${index}: ${input.name}, disabled: ${input.disabled}`);
         if (index === 0) {
             // Primeiro elemento - bloqueia se bloquearPrimeiro for true, libera se for false
             input.disabled = bloquearPrimeiro;
@@ -56,6 +57,8 @@ function bloquearCampos(bloquearPrimeiro) {
 // Função para limpar formulário
 function limparFormulario() {
     form.reset();
+    document.getElementById('mnemonicoProfessor').value = '';
+    document.getElementById('departamentoProfessor').value = '';
 }
 
 
@@ -81,6 +84,37 @@ function converterDataParaISO(dataString) {
     return new Date(dataString).toISOString();
 }
 
+async function funcaoEhProfessor(pessoaId) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/professor/${pessoaId}`);
+
+        if (response.status === 404) {
+            return { ehProfessor: false };
+        }
+
+        if (response.status === 200) {
+            const professorData = await response.json();
+            return {
+                ehProfessor: true, // CORREÇÃO: era "pessoa_id_pessoa: true"
+                mnemonico: professorData.mnemonico_professor, // CORREÇÃO: usar o nome correto do campo
+                departamento: professorData.departamento_professor // CORREÇÃO: usar o nome correto do campo
+            };
+        }
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error('Erro na requisição:', errorData.error);
+            return { ehProfessor: false };
+        }
+
+    } catch (error) {
+        console.error('Erro ao verificar se é professor:', error);
+        return { ehProfessor: false };
+    }
+}
+
+
+
 // Função para buscar pessoa por ID
 async function buscarPessoa() {
     const id = searchId.value.trim();
@@ -88,8 +122,10 @@ async function buscarPessoa() {
         mostrarMensagem('Digite um ID para buscar', 'warning');
         return;
     }
+
+
+
     bloquearCampos(false);
-    //focus no campo searchId
     searchId.focus();
     try {
         const response = await fetch(`${API_BASE_URL}/pessoas/${id}`);
@@ -114,6 +150,22 @@ async function buscarPessoa() {
     } catch (error) {
         console.error('Erro:', error);
         mostrarMensagem('Erro ao buscar pessoa', 'error');
+    }
+
+    // Verifica se a pessoa é professor
+    const oProfessor = await funcaoEhProfessor(id);
+
+    if (oProfessor.ehProfessor) {
+        // alert('É professor: ' + oProfessor.ehProfessor + ' - ' + oProfessor.mnemonico + ' - ' + oProfessor.departamento);
+
+        document.getElementById('checkboxProfessor').checked = true;
+        document.getElementById('mnemonicoProfessor').value = oProfessor.mnemonico;
+        document.getElementById('departamentoProfessor').value = oProfessor.departamento;
+    } else {
+        // Não é professor
+        document.getElementById('checkboxProfessor').checked = false;
+        document.getElementById('mnemonicoProfessor').value = '';
+        document.getElementById('departamentoProfessor').value = '';
     }
 }
 
@@ -185,7 +237,18 @@ async function salvarOperacao() {
         primeiro_acesso_pessoa: formData.get('primeiro_acesso_pessoa') === 'true',
         data_nascimento: formData.get('data_nascimento') || null
     };
+
+    let professor = null;
+    if (document.getElementById('checkboxProfessor').checked) {
+        professor = {
+            pessoa_id_pessoa: pessoa.id_pessoa,
+            mnemonico_professor: document.getElementById('mnemonicoProfessor').value,
+            departamento_professor: document.getElementById('departamentoProfessor').value
+        }
+    }
+
     let response = null;
+    let responsePessoa = null;
     try {
         if (operacao === 'incluir') {
             response = await fetch(`${API_BASE_URL}/pessoas`, {
@@ -195,6 +258,16 @@ async function salvarOperacao() {
                 },
                 body: JSON.stringify(pessoa)
             });
+            responsePessoa = response;
+            if (document.getElementById('checkboxProfessor').checked) {
+                response = await fetch(`${API_BASE_URL}/professor`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(professor)
+                });
+            }
         } else if (operacao === 'alterar') {
             response = await fetch(`${API_BASE_URL}/pessoas/${currentPersonId}`, {
                 method: 'PUT',
@@ -203,21 +276,72 @@ async function salvarOperacao() {
                 },
                 body: JSON.stringify(pessoa)
             });
+            responsePessoa = response;
+            if (document.getElementById('checkboxProfessor').checked) {
+                console.log('Vai alterar professor: ' + JSON.stringify(professor));
+                const caminhoRota = `${API_BASE_URL}/professor/${currentPersonId}`;
+                //console.log('Caminho da rota para professor: ' + caminhoRota);
+                //obter o professor para ver se existe
+                const respObterProfessor = await fetch(caminhoRota);
+                if (respObterProfessor.status === 404) {
+                    //não existe, incluir       
+                    response = await fetch(`${API_BASE_URL}/professor`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(professor)
+                    });
+                } else {
+                    //já existe, alterar
+                    response = await fetch(caminhoRota, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(professor)
+                    });
+                }
+            } else {
+                //se DEIXOU de ser professor, tentar excluir da tabela professor
+                const caminhoRota = `${API_BASE_URL}/professor/${currentPersonId}`;
+                const respObterProfessor = await fetch(caminhoRota);
+                console.log('Resposta ao obter professor para exclusão: ' + respObterProfessor.status);
+                if (respObterProfessor.status === 200) {
+                    //existe, pode excluir
+                    response = await fetch(caminhoRota, {
+                        method: 'DELETE'
+                    });
+                }
+            }
         } else if (operacao === 'excluir') {
+            //verificar se é professor, se for, excluir da tabela professor primeiro
+            const caminhoRota = `${API_BASE_URL}/professor/${currentPersonId}`;
+            const respObterProfessor = await fetch(caminhoRota);
+            console.log('Resposta ao obter professor para exclusão: ' + respObterProfessor.status);
+            if (respObterProfessor.status === 200) {
+                //existe, pode excluir
+                response = await fetch(caminhoRota, {
+                    method: 'DELETE'
+                });
+            }
+            //agora exclui da tabela pessoa
             // console.log('Excluindo pessoa com ID:', currentPersonId);
             response = await fetch(`${API_BASE_URL}/pessoas/${currentPersonId}`, {
                 method: 'DELETE'
             });
+            responsePessoa = response;
             console.log('Pessoa excluída' + response.status);
         }
-        if (response.ok && (operacao === 'incluir' || operacao === 'alterar')) {
-            const novaPessoa = await response.json();
+
+        if (responsePessoa.ok && (operacao === 'incluir' || operacao === 'alterar')) {
+            const novaPessoa = await responsePessoa.json();
             mostrarMensagem('Operação ' + operacao + ' realizada com sucesso!', 'success');
             limparFormulario();
             carregarPessoas();
 
         } else if (operacao !== 'excluir') {
-            const error = await response.json();
+            const error = await responsePessoa.json();
             mostrarMensagem(error.error || 'Erro ao incluir pessoa', 'error');
         } else {
             mostrarMensagem('Pessoa excluída com sucesso!', 'success');

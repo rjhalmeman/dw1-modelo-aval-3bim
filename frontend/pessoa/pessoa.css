@@ -403,3 +403,65 @@ footer {
         padding: 1rem;
     }
 }
+
+/* parte do 1 para 1 */
+/* Container principal para alinhar todos os elementos */
+.umParaum {
+    display: flex; /* Usa flexbox para alinhamento horizontal */
+    flex-wrap: wrap; /* Permite que os itens quebrem para a próxima linha se não houver espaço */
+    gap: 20px; /* Espaço entre os containers */
+    align-items: center; /* Alinha os itens verticalmente ao centro */
+    font-family: sans-serif; /* Fonte para o texto */
+}
+
+/* Estilo para os containers individuais */
+.professor,
+.avaliador,
+.avaliado {
+    padding: 15px; /* Espaçamento interno */
+    border-radius: 8px; /* Cantos arredondados */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra suave para profundidade */
+    display: flex; /* Flexbox para alinhar itens dentro do container */
+    align-items: center; /* Alinhamento vertical ao centro */
+}
+
+/* Cores suaves de verde para cada container */
+.professor {
+    background-color: #d4edda; /* Verde claro */
+    border: 1px solid #c3e6cb; /* Borda sutil */
+}
+
+.avaliador {
+    background-color: #c3e6cb; /* Verde um pouco mais escuro */
+    border: 1px solid #b1dfbb;
+}
+
+.avaliado {
+    background-color: #b1dfbb; /* Verde intermediário */
+    border: 1px solid #9fcdb9;
+}
+
+/* Estilo para os inputs */
+#spanProfessor {
+    margin-right: 8px; /* Espaço após o checkbox */
+    
+}
+
+input[type="checkbox"] {
+    margin-right: 8px; /* Espaço após o checkbox */
+}
+
+input[type="text"] {
+    border: 1px solid #ccc; /* Borda padrão */
+    border-radius: 4px; /* Cantos arredondados */
+    padding: 8px; /* Espaçamento interno */
+    margin-right: 8px; /* Espaço entre os inputs */
+    font-size: 14px; /* Tamanho da fonte */
+    margin-left: 8;
+}
+
+/* Ajusta o estilo do placeholder para ser mais discreto */
+::placeholder {
+    color: #888;
+    font-style: italic;
+}
