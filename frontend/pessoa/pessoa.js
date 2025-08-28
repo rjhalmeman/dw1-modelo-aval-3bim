@@ -267,6 +267,25 @@ async function salvarOperacao() {
                 },
                 body: JSON.stringify(pessoa)
             });
+            if (document.getElementById('checkboxProfessor').checked) {
+                const professor = {
+                    pessoa_id_pessoa: pessoa.id_pessoa,
+                    mnemonico_professor: document.getElementById('mnemonico_professor').value,
+                    departamento_professor: document.getElementById('departamento_professor').value
+                }
+
+                response = await fetch(`${API_BASE_URL}/professor`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(professor)
+                });
+            }
+
+
+
+
         } else if (operacao === 'excluir') {
             // console.log('Excluindo pessoa com ID:', currentPersonId);
             response = await fetch(`${API_BASE_URL}/pessoas/${currentPersonId}`, {

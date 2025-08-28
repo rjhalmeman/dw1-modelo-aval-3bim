@@ -69,8 +69,11 @@ exports.obterProfessor = async (req, res) => {
 }
 
 exports.atualizarProfessor = async (req, res) => {
+  console.log('Atualizando professor com ID:', req.params.id, 'e dados:', req.body);
   try {
     const id = parseInt(req.params.id);
+    console.log('ID do professor a ser atualizado:', id);
+    
     const { mnemonico_professor,departamento_professor} = req.body;
 
     
@@ -81,7 +84,7 @@ exports.atualizarProfessor = async (req, res) => {
     );
 
     if (existingPersonResult.rows.length === 0) {
-      return res.status(404).json({ error: 'Professor não encontrada' });
+      return res.status(404).json({ error: 'Professor não encontrado' });
     }
 
     // Constrói a query de atualização dinamicamente para campos não nulos
