@@ -11,7 +11,7 @@ exports.abrirCrudProfessor = (req, res) => {
 
 exports.listarProfessor = async (req, res) => {
   try {
-    const result = await query('SELECT * FROM professor ORDER BY id_professor');
+    const result = await query('SELECT * FROM professor ORDER BY pessoa_id_pessoa');
     // console.log('Resultado do SELECT:', result.rows);//verifica se está retornando algo
     res.json(result.rows);
   } catch (error) {
@@ -41,7 +41,7 @@ exports.criarProfessor = async (req, res) => {
 }
 
 exports.obterProfessor = async (req, res) => {
- // console.log('Obtendo professor com ID:', req.params.id);
+  // console.log('Obtendo professor com ID:', req.params.id);
 
   try {
     const id = parseInt(req.params.id);
@@ -72,14 +72,14 @@ exports.atualizarProfessor = async (req, res) => {
   console.log('Atualizando professor com ID:', req.params.id, 'e dados:', req.body);
   try {
     const id = parseInt(req.params.id);
-    console.log('ID do professor a ser atualizado:', id);
-    
-    const { mnemonico_professor,departamento_professor} = req.body;
 
-    
+    const { mnemonico_professor, departamento_professor } = req.body;
+    console.log('ID do professor a ser atualizado:' + id + ' Dados recebidos:' + mnemonico_professor + ' - ' + departamento_professor);
+
+
     // Verifica se a professor existe
     const existingPersonResult = await query(
-      'SELECT * FROM professor WHERE id_professor = $1',
+      'SELECT * FROM professor WHERE pessoa_id_pessoa = $1',
       [id]
     );
 
@@ -89,21 +89,23 @@ exports.atualizarProfessor = async (req, res) => {
 
     // Constrói a query de atualização dinamicamente para campos não nulos
     const currentPerson = existingPersonResult.rows[0];
+
     const updatedFields = {
       mnemonico_professor: mnemonico_professor,
-      departamento_professor: departamento_professor 
+      departamento_professor: departamento_professor
     };
+    // console.log('Campos da atualização:', updatedFields);
 
     // Atualiza a professor
     const updateResult = await query(
-      'UPDATE professor SET mnemonico_professor = $1, email_professor = $2 WHERE id_professor = $3 RETURNING *',
-      [updatedFields.nome_professor, updatedFields.departamento_professor, id]
+      'UPDATE professor SET mnemonico_professor = $1, departamento_professor = $2 WHERE pessoa_id_pessoa = $3 RETURNING *',
+      [updatedFields.mnemonico_professor, updatedFields.departamento_professor, id]
     );
 
     res.json(updateResult.rows[0]);
   } catch (error) {
     console.error('Erro ao atualizar professor:', error);
-   
+
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 }
@@ -113,17 +115,17 @@ exports.deletarProfessor = async (req, res) => {
     const id = parseInt(req.params.id);
     // Verifica se a professor existe
     const existingPersonResult = await query(
-      'SELECT * FROM professor WHERE id_professor = $1',
+      'SELECT * FROM professor WHERE pessoa_id_pessoa = $1',
       [id]
     );
 
     if (existingPersonResult.rows.length === 0) {
-      return res.status(404).json({ error: 'Professor não encontrada' });
+      return res.status(404).json({ error: 'Professor não encontrado' });
     }
 
     // Deleta a professor (as constraints CASCADE cuidarão das dependências)
     await query(
-      'DELETE FROM professor WHERE id_professor = $1',
+      'DELETE FROM professor WHERE pessoa_id_pessoa = $1',
       [id]
     );
 
@@ -138,77 +140,6 @@ exports.deletarProfessor = async (req, res) => {
       });
     }
 
-    res.status(500).json({ error: 'Erro interno do servidor' });
-  }
-}
-
-// Função adicional para buscar professor por email
-exports.obterProfessorPorEmail = async (req, res) => {
-  try {
-    const { email } = req.params;
-
-    if (!email) {
-      return res.status(400).json({ error: 'Email é obrigatório' });
-    }
-
-    const result = await query(
-      'SELECT * FROM professor WHERE email_professor = $1',
-      [email]
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: 'Professor não encontrada' });
-    }
-
-    res.json(result.rows[0]);
-  } catch (error) {
-    console.error('Erro ao obter professor por email:', error);
-    res.status(500).json({ error: 'Erro interno do servidor' });
-  }
-}
-
-// Função para atualizar apenas a senha
-exports.atualizarSenha = async (req, res) => {
-  try {
-    const id = parseInt(req.params.id);
-    const { senha_atual, nova_senha } = req.body;
-
-    if (isNaN(id)) {
-      return res.status(400).json({ error: 'ID deve ser um número válido' });
-    }
-
-    if (!senha_atual || !nova_senha) {
-      return res.status(400).json({
-        error: 'Senha atual e nova senha são obrigatórias'
-      });
-    }
-
-    // Verifica se a professor existe e a senha atual está correta
-    const personResult = await query(
-      'SELECT * FROM professor WHERE id_professor = $1',
-      [id]
-    );
-
-    if (personResult.rows.length === 0) {
-      return res.status(404).json({ error: 'Professor não encontrada' });
-    }
-
-    const person = personResult.rows[0];
-
-    // Verificação básica da senha atual (em produção, use hash)
-    if (person.senha_professor !== senha_atual) {
-      return res.status(400).json({ error: 'Senha atual incorreta' });
-    }
-
-    // Atualiza apenas a senha
-    const updateResult = await query(
-      'UPDATE professor SET senha_professor = $1 WHERE id_professor = $2 RETURNING id_professor, nome_professor, email_professor, primeiro_acesso_professor, data_nascimento',
-      [nova_senha, id]
-    );
-
-    res.json(updateResult.rows[0]);
-  } catch (error) {
-    console.error('Erro ao atualizar senha:', error);
     res.status(500).json({ error: 'Erro interno do servidor' });
   }
 }
