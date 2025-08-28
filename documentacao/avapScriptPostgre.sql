@@ -21,7 +21,7 @@ CREATE TABLE professor (
 
 -- Tabela avaliado
 CREATE TABLE avaliado (
-  pessoa_id_pessoa INTEGER PRIMARY KEY,
+  pessoa_id_pessoa INTEGER PRIMARY KEY
 );
 
 -- Tabela avaliador
