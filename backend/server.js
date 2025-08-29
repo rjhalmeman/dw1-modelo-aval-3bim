@@ -88,6 +88,9 @@ app.use('/professor', professorRoutes);
 const avaliadorRoutes = require('./routes/avaliadorRoutes');
 app.use('/avaliador', avaliadorRoutes);
 
+const avaliadoRoutes = require('./routes/avaliadoRoutes');
+app.use('/avaliado', avaliadoRoutes);
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Rota padrão
