@@ -236,7 +236,7 @@ function cancelarOperacao() {
 async function carregarQuestoes() {
     try {
         const response = await fetch(`${API_BASE_URL}/questoes`);
-        debugger
+    //    debugger
         if (response.ok) {
             const questoes = await response.json();
             renderizarTabelaQuestoes(questoes);

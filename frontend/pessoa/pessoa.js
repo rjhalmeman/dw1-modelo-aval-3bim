@@ -350,6 +350,7 @@ async function salvarOperacao() {
                         pessoa_id_pessoa: pessoa.id_pessoa
                     }
                 };
+                
                 respObterAvaliador = await fetch(`${API_BASE_URL}/avaliador`, {
                     method: 'POST',
                     headers: {
