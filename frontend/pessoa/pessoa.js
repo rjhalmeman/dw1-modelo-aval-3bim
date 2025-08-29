@@ -59,8 +59,7 @@ function limparFormulario() {
     form.reset();
     document.getElementById('mnemonicoProfessor').value = '';
     document.getElementById('departamentoProfessor').value = '';
-    document.getElementById('checkboxAvaliador').checked = false;
-    document.getElementById('checkboxAvaliador').checked = false;
+    document.getElementById('checkboxAvaliador').checked = false;    
     document.getElementById('checkboxAvaliado').checked = false;
 }
 
@@ -180,6 +179,19 @@ async function buscarPessoa() {
         console.error('Erro ao verificar se é avaliador:', error);
         document.getElementById('checkboxAvaliador').checked = false;
     }
+
+    //Verifica se a pessoa é avaliado
+    try {
+        const responseAvaliado = await fetch(`${API_BASE_URL}/avaliado/${id}`);
+        if (responseAvaliado.status === 200) {
+            document.getElementById('checkboxAvaliado').checked = true;
+        } else {
+            document.getElementById('checkboxAvaliado').checked = false;
+        }
+    } catch (error) {
+        console.error('Erro ao verificar se é avaliado:', error);
+        document.getElementById('checkboxAvaliado').checked = false;
+    }
 }
 
 // Função para preencher formulário com dados da pessoa
@@ -263,6 +275,9 @@ async function salvarOperacao() {
     // é avaliador
     let ehAvaliador = document.getElementById('checkboxAvaliador').checked; //true ou false
 
+    // é avaliado
+    let ehAvaliado = document.getElementById('checkboxAvaliado').checked; //true ou false
+
     let responseProfessor = null;
     let responsePessoa = null;
     try {
@@ -298,6 +313,19 @@ async function salvarOperacao() {
                 });
             }
 
+            let responseAvaliado = null;
+            if (ehAvaliado) {
+                const avaliado = {
+                    pessoa_id_pessoa: pessoa.id_pessoa
+                };
+                responseAvaliado = await fetch(`${API_BASE_URL}/avaliado`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(avaliado)
+                });
+            }
 
         } else if (operacao === 'alterar') {
             responseProfessor = await fetch(`${API_BASE_URL}/pessoas/${currentPersonId}`, {
@@ -341,6 +369,40 @@ async function salvarOperacao() {
                     });
                 }
             }
+
+             if (ehAvaliado) {
+                //se DEIXOU de ser avaliado, excluir da tabela avaliado
+                const caminhoRota = `${API_BASE_URL}/avaliado/${currentPersonId}`;
+
+                let respObterAvaliado = await fetch(caminhoRota);
+                //    console.log('Resposta ao obter avaliado ao alterar pessoa: ' + respObterAvaliado.status);
+                let avaliado = null;
+                if (respObterAvaliado.status === 404) {
+                    //incluir avaliado
+                    avaliado = {
+                        pessoa_id_pessoa: pessoa.id_pessoa
+                    }
+                };
+                respObterAvaliado = await fetch(`${API_BASE_URL}/avaliado`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(avaliado)
+                });
+            } else {
+                //se DEIXOU de ser avaliado, excluir da tabela avaliado
+                const caminhoRota = `${API_BASE_URL}/avaliado/${currentPersonId}`;
+                let respObterAvaliado = await fetch(caminhoRota);
+                // console.log('Resposta ao obter avaliado para exclusão: ' + respObterAvaliado.status);
+                if (respObterAvaliado.status === 200) {
+                    //existe, pode excluir
+                    respObterAvaliado = await fetch(caminhoRota, {
+                        method: 'DELETE'
+                    });
+                }
+            }
+
 
             if (document.getElementById('checkboxProfessor').checked) {
                 //   console.log('Vai alterar professor: ' + JSON.stringify(professor));
@@ -388,6 +450,18 @@ async function salvarOperacao() {
             if (respObterAvaliador.status === 200) {
                 //existe, pode excluir
                 responseAvaliador = await fetch(caminhoRotaAvaliador, {
+                    method: 'DELETE'
+                });
+            }
+
+             //se é avaliado, excluir da tabela avaliado primeiro
+            let responseAvaliado = null;
+            const caminhoRotaAvaliado = `${API_BASE_URL}/avaliado/${currentPersonId}`;
+            const respObterAvaliado = await fetch(caminhoRotaAvaliado);
+            //console.log('Resposta ao obter avaliado para exclusão: ' + respObterAvaliado.status);
+            if (respObterAvaliado.status === 200) {
+                //existe, pode excluir
+                responseAvaliado = await fetch(caminhoRotaAvaliado, {
                     method: 'DELETE'
                 });
             }
