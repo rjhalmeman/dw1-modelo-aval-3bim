@@ -91,6 +91,10 @@ app.use('/avaliador', avaliadorRoutes);
 const avaliadoRoutes = require('./routes/avaliadoRoutes');
 app.use('/avaliado', avaliadoRoutes);
 
+
+const avaliacaoRoutes = require('./routes/avaliacaoRoutes');
+app.use('/avaliacao', avaliacaoRoutes);
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Rota padrão
