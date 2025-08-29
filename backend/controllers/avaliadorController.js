@@ -17,7 +17,7 @@ exports.listarAvaliador = async (req, res) => {
 }
 
 exports.criarAvaliador = async (req, res) => {
-  //  console.log('Criando avaliador com dados:', req.body);
+    console.log('Criando avaliador com dados:', req.body);
   try {
     const { pessoa_id_pessoa } = req.body;
 
@@ -66,6 +66,7 @@ exports.obterAvaliador = async (req, res) => {
 
 
 exports.deletarAvaliador = async (req, res) => {
+  console.log('Deletando avaliador com ID:', req.params.id);
   try {
     const id = parseInt(req.params.id);
     // Verifica se a avaliador existe
