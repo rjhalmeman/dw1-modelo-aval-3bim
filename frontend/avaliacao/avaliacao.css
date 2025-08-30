@@ -119,8 +119,7 @@ fieldset legend {
     color: #2d4a2d;
 }
 
-.form-group input,
-.form-group select {
+.form-group input{
     width: 100%;
     padding: 0.8rem;
     border: 2px solid #c0e0c0;
@@ -129,6 +128,17 @@ fieldset legend {
     transition: all 0.3s ease;
     background: white;
 }
+
+.form-group select {
+        width: 100%;
+    padding: 0.8rem;
+    border: 2px solid #c0e0c0;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: rgb(125, 255, 179);
+}
+
 
 .form-group input:focus,
 .form-group select:focus {
