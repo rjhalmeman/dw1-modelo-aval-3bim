@@ -19,7 +19,7 @@
 
 1.5 - digite ```npm install```
 
-1.6 na pasta do projeto, digit ```code .``` (vai abrir o projeto no vscode)
+1.6 na pasta do projeto, digite  ```code .``` e pressione enter (vai abrir o projeto no vscode)
 
 ### 2 - Criando o banco de dados
 
