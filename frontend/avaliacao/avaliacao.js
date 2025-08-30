@@ -92,7 +92,7 @@ async function buscarAvaliacao() {
     //focus no campo searchId
     searchId.focus();
     try {
-        const response = await fetch(`${API_BASE_URL}/avaliacoes/${id}`);
+        const response = await fetch(`${API_BASE_URL}/avaliacao/${id}`);
 
         if (response.ok) {
             const avaliacao = await response.json();
@@ -118,14 +118,53 @@ async function buscarAvaliacao() {
 }
 
 // Função para preencher formulário com dados da avaliacao
-function preencherFormulario(avaliacao) {
+async function preencherFormulario(avaliacao) {
     currentPersonId = avaliacao.id_avaliacao;
     searchId.value = avaliacao.id_avaliacao;
-    document.getElementById('texto_avaliacao').value = avaliacao.texto_avaliacao || '';
-    document.getElementById('texto_avaliacao').value = avaliacao.texto_avaliacao || '';
-    document.getElementById('nota_maxima_avaliacao').value = avaliacao.nota_maxima_avaliacao || '';
-    document.getElementById('texto_complementar_avaliacao').value = avaliacao.texto_complementar_avaliacao || '';
+    document.getElementById('descricao_avaliacao').value = avaliacao.descricao_avaliacao || '';
+
+    // Formatação da data para input type="date"
+    if (avaliacao.data_avaliacao) {
+        const data = new Date(avaliacao.data_avaliacao);
+        const dataFormatada = data.toISOString().split('T')[0];
+        document.getElementById('data_avaliacao').value = dataFormatada;
+    } else {
+        document.getElementById('data_avaliacao').value = '';
+    }
+
+    // Preencher o select de professores
+    try {
+        const response = await fetch('http://localhost:3001/professor');
+        if (!response.ok) throw new Error('Erro ao buscar professores');
+        const professores = await response.json();
+
+        const selectProfessor = document.getElementById('professor_pessoa_id_pessoa');
+        selectProfessor.innerHTML = ''; // limpa antes de preencher
+
+        // cria opção vazia
+        const optionVazia = document.createElement('option');
+        optionVazia.value = '';
+        optionVazia.textContent = 'Selecione um professor';
+        selectProfessor.appendChild(optionVazia);
+
+        // popula com dados vindos da API
+        professores.forEach(prof => {
+            const option = document.createElement('option');
+            option.value = prof.pessoa_id_pessoa;
+            option.textContent = `${prof.mnemonico_professor} - ${prof.departamento_professor}`;
+            if (avaliacao.professor_pessoa_id_pessoa === prof.pessoa_id_pessoa) {
+                option.selected = true; // marca o professor da avaliação
+            }
+            selectProfessor.appendChild(option);
+        });
+
+    } catch (error) {
+        console.error('Erro ao carregar professores:', error);
+    }
+
+    document.getElementById('porcentagem_tolerancia_avaliacao').value = avaliacao.porcentagem_tolerancia_avaliacao || 0;
 }
+
 
 
 // Função para incluir avaliacao
@@ -139,7 +178,7 @@ async function incluirAvaliacao() {
     bloquearCampos(true);
 
     mostrarBotoes(false, false, false, false, true, true); // mostrarBotoes(btBuscar, btIncluir, btAlterar, btExcluir, btSalvar, btCancelar)
-    document.getElementById('texto_avaliacao').focus();
+    document.getElementById('descricao_avaliacao').focus();
     operacao = 'incluir';
     // console.log('fim nova avaliacao - currentPersonId: ' + currentPersonId);
 }
@@ -149,7 +188,7 @@ async function alterarAvaliacao() {
     mostrarMensagem('Digite os dados!', 'success');
     bloquearCampos(true);
     mostrarBotoes(false, false, false, false, true, true);// mostrarBotoes(btBuscar, btIncluir, btAlterar, btExcluir, btSalvar, btCancelar)
-    document.getElementById('texto_avaliacao').focus();
+    document.getElementById('descricao_avaliacao').focus();
     operacao = 'alterar';
 }
 
@@ -170,14 +209,17 @@ async function salvarOperacao() {
     const formData = new FormData(form);
     const avaliacao = {
         id_avaliacao: searchId.value,
-        texto_avaliacao: formData.get('texto_avaliacao'),
-        nota_maxima_avaliacao: formData.get('nota_maxima_avaliacao'),
-        texto_complementar_avaliacao: formData.get('texto_complementar_avaliacao')
+        descricao_avaliacao: formData.get('descricao_avaliacao'),
+        data_avaliacao: formData.get('data_avaliacao'),
+        professor_pessoa_id_pessoa: formData.get('professor_pessoa_id_pessoa'),
+        porcentagem_tolerancia_avaliacao: formData.get('porcentagem_tolerancia_avaliacao')        
     };
     let response = null;
     try {
         if (operacao === 'incluir') {
-            response = await fetch(`${API_BASE_URL}/avaliacoes`, {
+           // console.log('Incluindo nova avaliacao com dados:', avaliacao);
+
+            response = await fetch(`${API_BASE_URL}/avaliacao`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -185,7 +227,7 @@ async function salvarOperacao() {
                 body: JSON.stringify(avaliacao)
             });
         } else if (operacao === 'alterar') {
-            response = await fetch(`${API_BASE_URL}/avaliacoes/${currentPersonId}`, {
+            response = await fetch(`${API_BASE_URL}/avaliacao/${currentPersonId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -194,7 +236,7 @@ async function salvarOperacao() {
             });
         } else if (operacao === 'excluir') {
             // console.log('Excluindo avaliacao com ID:', currentPersonId);
-            response = await fetch(`${API_BASE_URL}/avaliacoes/${currentPersonId}`, {
+            response = await fetch(`${API_BASE_URL}/avaliacao/${currentPersonId}`, {
                 method: 'DELETE'
             });
             console.log('Avaliacao excluída' + response.status);
@@ -232,10 +274,10 @@ function cancelarOperacao() {
     mostrarMensagem('Operação cancelada', 'info');
 }
 
-// Função para carregar lista de avaliacoes
+// Função para carregar lista de avaliacao
 async function carregarAvaliacoes() {
     try {
-        const response = await fetch(`${API_BASE_URL}/avaliacoes`);
+        const response = await fetch(`${API_BASE_URL}/avaliacao`);
         //    debugger
         if (response.ok) {
             const avaliacoes = await response.json();
@@ -261,8 +303,8 @@ function renderizarTabelaAvaliacoes(avaliacoes) {
                             ${avaliacao.id_avaliacao}
                         </button>
                     </td>
-                    <td>${avaliacao.texto_avaliacao}</td>
-                    <td>${avaliacao.nota_maxima_avaliacao}</td>
+                    <td>${avaliacao.descricao_avaliacao}</td>
+                    <td>${avaliacao.porcentagem_tolerancia_avaliacao}</td>
                     <td>${avaliacao.texto_complementar_avaliacao}</td>
                                  
                 `;

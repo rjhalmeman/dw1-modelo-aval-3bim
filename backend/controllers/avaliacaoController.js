@@ -5,9 +5,9 @@ const { query } = require('../database');
 const path = require('path');
 
 exports.abrirCrudAvaliacao = (req, res) => {
-  console.log('avaliacaoController - Rota /abrirCrudAvaliacao - abrir o crudAvaliacao');
+//  console.log('avaliacaoController - Rota /abrirCrudAvaliacao - abrir o crudAvaliacao');
   res.sendFile(path.join(__dirname, '../../frontend/avaliacao/avaliacao.html'));
-}
+} //
 
 exports.listarAvaliacoes = async (req, res) => {
   try {
@@ -21,12 +21,14 @@ exports.listarAvaliacoes = async (req, res) => {
 }
 
 exports.criarAvaliacao = async (req, res) => {
-  //  console.log('Criando avaliacao com dados:', req.body);
+    console.log('Criando avaliacao com dados:', req.body);
   try {
     const { id_avaliacao, descricao_avaliacao, data_avaliacao, professor_pessoa_id_pessoa, porcentagem_tolerancia_avaliacao} = req.body;
 
+   // console.log('Dados recebidos:', { id_avaliacao, descricao_avaliacao, data_avaliacao, professor_pessoa_id_pessoa, porcentagem_tolerancia_avaliacao });
+
     // Validação básica
-    if (!descricao_avaliacao || !data_avaliacao || !professor_pessoa_id_pessoa) {
+    if (!descricao_avaliacao || !data_avaliacao || !professor_pessoa_id_pessoa || !porcentagem_tolerancia_avaliacao) {
       return res.status(400).json({
         error: 'Texto, nota máxima e texto complementar são obrigatórios'
       });
@@ -34,7 +36,7 @@ exports.criarAvaliacao = async (req, res) => {
 
     const result = await query(
       'INSERT INTO avaliacao (id_avaliacao, descricao_avaliacao, data_avaliacao, professor_pessoa_id_pessoa, porcentagem_tolerancia_avaliacao) VALUES ($1, $2, $3, $4, $5) RETURNING *',
-      [id_avaliacao, descricao_avaliacao, data_avaliacao, professor_pessoa_id_pessoa]
+      [id_avaliacao, descricao_avaliacao, data_avaliacao, professor_pessoa_id_pessoa,porcentagem_tolerancia_avaliacao]
     );
 
     res.status(201).json(result.rows[0]);
@@ -53,7 +55,11 @@ exports.criarAvaliacao = async (req, res) => {
   }
 }
 
+
+
 exports.obterAvaliacao = async (req, res) => {
+  //console.log('Obtendo avaliacao com ID:', req.params.id);
+
   try {
     const id = parseInt(req.params.id);
 
@@ -65,6 +71,8 @@ exports.obterAvaliacao = async (req, res) => {
       'SELECT * FROM avaliacao WHERE id_avaliacao = $1',
       [id]
     );
+
+    console.log('Resultado do SELECT:', result.rows); // Verifica se está retornando algo
 
     if (result.rows.length === 0) {
       return res.status(404).json({ error: 'Avaliacao não encontrada' });
