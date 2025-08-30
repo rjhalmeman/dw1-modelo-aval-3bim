@@ -304,8 +304,9 @@ function renderizarTabelaAvaliacoes(avaliacoes) {
                         </button>
                     </td>
                     <td>${avaliacao.descricao_avaliacao}</td>
+                    <td> ${formatarData(avaliacao.data_avaliacao)}</td>
+                    <td>${avaliacao.professor_pessoa_id_pessoa}</td>                    
                     <td>${avaliacao.porcentagem_tolerancia_avaliacao}</td>
-                    <td>${avaliacao.texto_complementar_avaliacao}</td>
                                  
                 `;
         avaliacoesTableBody.appendChild(row);
