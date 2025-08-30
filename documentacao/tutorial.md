@@ -13,13 +13,13 @@
 
 1.2 abra essa pasta no terminal (windows é power shell ou cmd)
 
-1.3 digite git clone https://github.com/rjhalmeman/dw1-modelo-aval-3bim.git
+1.3 digite ```git clone https://github.com/rjhalmeman/dw1-modelo-aval-3bim.git```
 
-1.4 estando no terminal, depois de clonar, digite cd dw1-modelo-aval-3bim.git (para entrar na pasta do projeto)
+1.4 estando no terminal, depois de clonar, digite ```cd dw1-modelo-aval-3bim.git``` (para entrar na pasta do projeto)
 
-1.5 - digite npm install
+1.5 - digite ```npm install```
 
-1.6 na pasta do projeto, digit code . (vai abrir o projeto no vscode)
+1.6 na pasta do projeto, digit ```code .``` (vai abrir o projeto no vscode)
 
 ### 2 - Criando o banco de dados
 
@@ -29,7 +29,7 @@
 
 2.3 - registre um servidor (caso não tenha nenhum)
 
-2.4 - crie um banco de dados (sugiro que o nome seja avap, para não ter que mexer na programação)
+2.4 - crie um banco de dados (sugiro que o nome seja ```avap```, para não ter que mexer na programação)
 
 2.5 - vá no vscode (que deverá estar com o projeto aberto), na pasta documentacao tem um arquivo chamado avapScriptPostgre.sql
 
@@ -45,18 +45,19 @@
 
 3.2 - modifique 
 
+```
                 user: 'radames', // Usuário do PostgreSQL (ajuste conforme necessário)
 
                 password: 'Lageado001.', //sua senha no postgres
 
                 database: 'avap', //nome do banco de dados, caso você tenha mudado
-
+```
 
 3.3 - salve o arquivo
 
 ### 4 - subir o servidor
 
-4.1 - no terminal, na pasta do projeto, digite node backend/server.js (deverá subir o servidor)
+4.1 - no terminal, na pasta do projeto, digite ```node backend/server.js``` (deverá subir o servidor)
 
 ### 5 - Executando o frontend
 
