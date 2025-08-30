@@ -4,7 +4,7 @@
      o git instalado 
      o node, npm e o vscode instalados
      o postgreSQL instalado (saber o nome do usuário e a senha)
-     o pgAdmin4 instalado 
+     o pgAdmin4 (ou similar) instalado 
     
 
 ### 1 - clone o projeto no seu computador (do github vai para sua máquina local)
