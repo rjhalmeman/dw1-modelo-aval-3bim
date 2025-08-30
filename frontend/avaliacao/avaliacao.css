@@ -1,0 +1,405 @@
+/* Reset e configurações básicas */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: white;
+    color: #2d4a2d;
+    line-height: 1.0;
+    min-height: 100vh;
+    
+}
+
+/* Header */
+header {
+    background: linear-gradient(135deg, #2d4a2d, #4a7c59);
+    color: white;
+    text-align: center;
+    padding: 2rem 0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+header h1 {
+    font-size: 1.5rem;
+    font-weight: 00;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Main container */
+main {
+    max-width: 1200px;
+   
+    margin: 2rem auto;
+    padding: 0 2rem;
+    display: grid;
+    gap: 2rem;
+}
+
+/* Sections */
+section {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 4px 15px rgba(45, 74, 45, 0.1);
+    border: 1px solid #e0f2e0;
+    
+    
+    
+    /* background-color: rgb(220, 252, 241); */
+}
+
+section h2 {
+    color: #2d4a2d;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    border-bottom: 3px solid aquamarine;
+    padding-bottom: 0.5rem;
+}
+
+/* Form styles */
+.search-container {
+    background: #f0fff0;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+    border: 2px solid #2d4a2d;
+}
+
+.search-container label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #2d4a2d;
+}
+
+.search-input-group input,
+.search-input-group button {
+    height: 42px;
+}
+
+.search-input-group {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.search-input-group input {
+    flex: 1;
+    max-width: 200px;
+}
+
+fieldset {
+    border: 1px solid #6fa06f;
+    border-radius: 8px;
+    padding: 1.0rem;
+    margin-bottom: 1rem;
+    background: #fafffe;
+}
+
+fieldset legend {
+    font-weight: 600;
+    color: #2d4a2d;
+    padding: 0 0.5rem;
+    font-size: 1.0rem;
+}
+
+.form-group {
+    margin-bottom: 1rem;
+   
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.2rem;
+    font-weight: 600;
+    color: #2d4a2d;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid #c0e0c0;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: aquamarine;
+    box-shadow: 0 0 0 3px rgba(127, 255, 212, 0.3);
+    background: #f9fffc;
+}
+
+/* Button styles */
+.button-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+button {
+    padding: 0.8rem 2rem;
+    border: 1px solid #2d4a2d;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 100px;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, aquamarine, #40e0d0);
+    color: #2d4a2d;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #40e0d0, #20b2aa);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(64, 224, 208, 0.4);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #6fa06f, #5a8a5a);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #5a8a5a, #4a7a4a);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(106, 160, 111, 0.4);
+}
+
+.btn-save {
+    background: linear-gradient(135deg, #ffa600, #ffd53f);
+    color: white;
+}
+
+.btn-save:hover {
+    background: linear-gradient(135deg, #ffa600, #ffd53f);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(106, 160, 111, 0.4);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #c82333, #a71e2a);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.4);
+}
+
+.btn-cancel {
+    background: linear-gradient(135deg, #6c757d, #5a6268);
+    color: white;
+}
+
+.btn-cancel:hover {
+    background: linear-gradient(135deg, #5a6268, #495057);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.4);
+}
+
+.btn-small {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+    min-width: auto;
+}
+
+.btn-id {
+    background: aquamarine;
+    color: #2d4a2d;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+    min-width: auto;
+    border-radius: 4px;
+}
+
+.btn-id:hover {
+    background: #40e0d0;
+    transform: scale(1.05);
+}
+
+/* Table styles */
+.table-container {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 2px solid #e0f2e0;
+    border-radius: 8px;
+    background: white;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+table thead {
+    background: linear-gradient(135deg, #2d4a2d, #4a7c59);
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+table th,
+table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e0f2e0;
+}
+
+table th {
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+table tbody tr:hover {
+    background-color: #f0fff0;
+}
+
+table tbody tr:nth-child(even) {
+    background-color: #fafffe;
+}
+
+table tbody tr:nth-child(even):hover {
+    background-color: #f0fff0;
+}
+
+/* Message styles */
+.message-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.message {
+    padding: 1rem 1.5rem;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: slideIn 0.3s ease;
+}
+
+.message.success {
+    background: linear-gradient(135deg, #d4edda, #c3e6cb);
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.message.error {
+    background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.message.warning {
+    background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.message.info {
+    background: linear-gradient(135deg, #d1ecf1, aquamarine);
+    color: #0c5460;
+    border: 1px solid #b8daff;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Footer */
+footer {
+    background: #2d4a2d;
+    color: white;
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: 1rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    main {
+        padding: 0 1rem;
+    }
+
+    header h1 {
+        font-size: 2rem;
+    }
+
+    .search-input-group {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-input-group input {
+        max-width: none;
+        margin-bottom: 0.5rem;
+    }
+
+    .button-group {
+        flex-direction: column;
+    }
+
+    button {
+        min-width: auto;
+    }
+
+    table {
+        font-size: 0.85rem;
+    }
+
+    table th,
+    table td {
+        padding: 0.5rem;
+    }
+
+    .message-container {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    section {
+        padding: 1rem;
+    }
+
+    .search-container,
+    fieldset {
+        padding: 1rem;
+    }
+}

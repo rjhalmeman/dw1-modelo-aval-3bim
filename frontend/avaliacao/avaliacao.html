@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD - Avaliação</title>
+    <link rel="stylesheet" href="/avaliacao/avaliacao.css">
+</head>
+
+<body>
+    <header>
+        <h1>CRUD Avaliação</h1>
+    </header>
+
+    <main>
+        <section class="form-section">
+            <h2>Cadastro de Avaliação</h2>
+
+            <form id="avaliacaoForm">
+                <div class="search-container">
+                    <label for="searchId">Buscar por ID:</label>
+                    <div class="search-input-group">
+                        <input type="number" id="searchId" placeholder="Digite o ID para buscar">
+                        <button type="button" id="btnBuscar">🔍 Buscar</button>
+
+                        <button type="button" id="btnIncluir" class="btn-primary">Incluir</button>
+                        <button type="button" id="btnAlterar" class="btn-secondary"
+                            style="display: none;">Alterar</button>
+                        <button type="button" id="btnExcluir" class="btn-danger" style="display: none;">Excluir</button>
+                        <button type="button" id="btnSalvar" class="btn-save" style="display: none;">Salvar</button>
+                        <button type="button" id="btnCancelar" class="btn-cancel">Cancelar</button>
+                    </div>
+                </div>
+
+                <fieldset id="formFields">
+                    <legend>Dados da Avaliação</legend>
+
+                    <div class="form-group">
+                        <label for="descricao_avaliacao">Descrição:</label>
+                        <input type="text" id="descricao_avaliacao" name="descricao_avaliacao" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="data_avaliacao">Data:</label>
+                        <input type="date" id="data_avaliacao" name="data_avaliacao">
+                    </div>
+
+                    <div class="form-group">
+                        <!-- Dados serão carregados dinamicamente -->
+                        <label for="professor_pessoa_id_pessoa">Professor:</label>
+                        <select id="professor_pessoa_id_pessoa" name="professor_pessoa_id_pessoa">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="porcentagem_tolerancia_avaliacao">Porcentagem de tolerância:</label>
+                        <input type="number" id="porcentagem_tolerancia_avaliacao"
+                            name="porcentagem_tolerancia_avaliacao" required>
+                    </div>
+
+
+                </fieldset>
+            </form>
+        </section>
+
+        <section class="list-section">
+            <div class="table-container">
+                <table id="avaliacoesTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Texto</th>
+                            <th>Data</th>
+                            <th>Professor ID</th>
+                            <th>Tolerância</th>
+                        </tr>
+                    </thead>
+                    <tbody id="avaliacoesTableBody">
+                        <!-- Dados serão carregados dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 CRUD Avaliacao</p>
+    </footer>
+
+    <div id="messageContainer" class="message-container"></div>
+
+    <script src="/avaliacao/avaliacao.js" defer></script>
+
+</body>
+
+</html>
