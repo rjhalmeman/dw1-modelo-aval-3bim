@@ -448,3 +448,43 @@ footer {
     box-shadow: 0 2px 8px rgba(45, 74, 45, 0.1);
     padding: 1rem;
 }
+
+.infoAvaliacao {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    background-color: #e8f5e8;
+    padding: 10px;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.infoAvaliacao span {
+    flex: 1;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Opcional: estilização individual para melhor visualização */
+#descricao_avaliacao {
+    font-weight: bold;
+}
+
+#data_avaliacao {
+    color: #555;
+    font-style: italic;
+}
+
+#professor_pessoa_id_pessoa {
+    color: #333;
+}
+
+#porcentagem_tolerancia_avaliacao {
+    font-weight: bold;
+    color: #2c5e2c;
+}

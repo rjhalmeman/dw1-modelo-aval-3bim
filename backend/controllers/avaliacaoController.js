@@ -58,7 +58,7 @@ exports.criarAvaliacao = async (req, res) => {
 
 
 exports.obterAvaliacao = async (req, res) => {
-  //console.log('Obtendo avaliacao com ID:', req.params.id);
+  console.log('avaliacaoController -> obterAvaliacao com ID:', req.params.id);
 
   try {
     const id = parseInt(req.params.id);

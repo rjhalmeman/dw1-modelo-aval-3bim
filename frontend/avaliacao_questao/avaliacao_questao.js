@@ -121,48 +121,51 @@ async function buscarAvaliacao() {
 async function preencherFormulario(avaliacao) {
     currentPersonId = avaliacao.id_avaliacao;
     searchId.value = avaliacao.id_avaliacao;
-    document.getElementById('descricao_avaliacao').value = avaliacao.descricao_avaliacao || '';
+
+
+    document.getElementById('descricao_avaliacao').innerHTML = avaliacao.descricao_avaliacao || '';
 
     // Formatação da data para input type="date"
     if (avaliacao.data_avaliacao) {
         const data = new Date(avaliacao.data_avaliacao);
         const dataFormatada = data.toISOString().split('T')[0];
-        document.getElementById('data_avaliacao').value = dataFormatada;
+        document.getElementById('data_avaliacao').innerHTML = formatarData(dataFormatada);
     } else {
-        document.getElementById('data_avaliacao').value = '';
+        document.getElementById('data_avaliacao').innerHTML = '';
     }
+
+    document.getElementById('professor_pessoa_id_pessoa').innerHTML = avaliacao.professor_pessoa_id_pessoa || '';
+    document.getElementById('porcentagem_tolerancia_avaliacao').innerHTML = avaliacao.porcentagem_tolerancia_avaliacao || '';
 
     // Preencher o select de professores
     try {
-        const response = await fetch('http://localhost:3001/professor');
-        if (!response.ok) throw new Error('Erro ao buscar professores');
-        const professores = await response.json();
+        const response = await fetch('http://localhost:3001/questao');
+        if (!response.ok) throw new Error('Erro ao buscar questões');
+        const questoes = await response.json();
 
-        const selectProfessor = document.getElementById('professor_pessoa_id_pessoa');
-        selectProfessor.innerHTML = ''; // limpa antes de preencher
 
-        // cria opção vazia
-        const optionVazia = document.createElement('option');
-        optionVazia.value = '';
-        optionVazia.textContent = 'Selecione um professor';
-        selectProfessor.appendChild(optionVazia);
+        //limpar tabela de questões
+        const tabelaQuestoesBody = document.getElementById('tabelaQuestoesBody');
+        tabelaQuestoesBody.innerHTML = '';
 
-        // popula com dados vindos da API
-        professores.forEach(prof => {
-            const option = document.createElement('option');
-            option.value = prof.pessoa_id_pessoa;
-            option.textContent = `${prof.mnemonico_professor} - ${prof.departamento_professor}`;
-            if (avaliacao.professor_pessoa_id_pessoa === prof.pessoa_id_pessoa) {
-                option.selected = true; // marca o professor da avaliação
-            }
-            selectProfessor.appendChild(option);
+        // popular tabela de questões   
+
+
+
+        questoes.forEach(questao => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                        <td>${questao.id_questao}</td>
+                        <td>${questao.texto_questao}</td>
+                        <td>${questao.nota_maxima_questao}</td>                                               
+                    `;
+            tabelaQuestoesBody.appendChild(row);
         });
+
 
     } catch (error) {
         console.error('Erro ao carregar professores:', error);
     }
-
-    document.getElementById('porcentagem_tolerancia_avaliacao').value = avaliacao.porcentagem_tolerancia_avaliacao || 0;
 }
 
 
@@ -212,12 +215,12 @@ async function salvarOperacao() {
         descricao_avaliacao: formData.get('descricao_avaliacao'),
         data_avaliacao: formData.get('data_avaliacao'),
         professor_pessoa_id_pessoa: formData.get('professor_pessoa_id_pessoa'),
-        porcentagem_tolerancia_avaliacao: formData.get('porcentagem_tolerancia_avaliacao')        
+        porcentagem_tolerancia_avaliacao: formData.get('porcentagem_tolerancia_avaliacao')
     };
     let response = null;
     try {
         if (operacao === 'incluir') {
-           // console.log('Incluindo nova avaliacao com dados:', avaliacao);
+            // console.log('Incluindo nova avaliacao com dados:', avaliacao);
 
             response = await fetch(`${API_BASE_URL}/avaliacao`, {
                 method: 'POST',
