@@ -23,11 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Event Listeners
 btnBuscar.addEventListener('click', buscarAvaliacao);
-btnIncluir.addEventListener('click', incluirAvaliacao);
-btnAlterar.addEventListener('click', alterarAvaliacao);
-btnExcluir.addEventListener('click', excluirAvaliacao);
-btnCancelar.addEventListener('click', cancelarOperacao);
-btnSalvar.addEventListener('click', salvarOperacao);
+
 
 mostrarBotoes(true, false, false, false, false, false);// mostrarBotoes(btBuscar, btIncluir, btAlterar, btExcluir, btSalvar, btCancelar)
 bloquearCampos(false);//libera pk e bloqueia os demais campos
@@ -59,13 +55,8 @@ function limparFormulario() {
 }
 
 
-function mostrarBotoes(btBuscar, btIncluir, btAlterar, btExcluir, btSalvar, btCancelar) {
-    btnBuscar.style.display = btBuscar ? 'inline-block' : 'none';
-    btnIncluir.style.display = btIncluir ? 'inline-block' : 'none';
-    btnAlterar.style.display = btAlterar ? 'inline-block' : 'none';
-    btnExcluir.style.display = btExcluir ? 'inline-block' : 'none';
-    btnSalvar.style.display = btSalvar ? 'inline-block' : 'none';
-    btnCancelar.style.display = btCancelar ? 'inline-block' : 'none';
+function mostrarBotoes(btBuscar) {
+    btnBuscar.style.display = btBuscar ? 'inline-block' : 'none';  
 }
 
 // Função para formatar data para exibição
@@ -137,27 +128,30 @@ async function preencherFormulario(avaliacao) {
     document.getElementById('professor_pessoa_id_pessoa').innerHTML = avaliacao.professor_pessoa_id_pessoa || '';
     document.getElementById('porcentagem_tolerancia_avaliacao').innerHTML = avaliacao.porcentagem_tolerancia_avaliacao || '';
 
-    // Preencher o select de professores
+    // Preencher com questões
+    
     try {
-        const response = await fetch('http://localhost:3001/questao');
+        let rotaQuestao = API_BASE_URL+'/questao';
+        console.log('Rota questão: ' + rotaQuestao);
+        const response = await fetch(rotaQuestao);
+        
         if (!response.ok) throw new Error('Erro ao buscar questões');
+
         const questoes = await response.json();
 
+        console.log('Questões carregadas:', questoes);
 
         //limpar tabela de questões
         const tabelaQuestoesBody = document.getElementById('tabelaQuestoesBody');
         tabelaQuestoesBody.innerHTML = '';
-
         // popular tabela de questões   
-
-
 
         questoes.forEach(questao => {
             const row = document.createElement('tr');
             row.innerHTML = `
                         <td>${questao.id_questao}</td>
-                        <td>${questao.texto_questao}</td>
-                        <td>${questao.nota_maxima_questao}</td>                                               
+                        <td>${questao.texto_questao}</td> 
+                        <td>${questao.nota_maxima_questao}</td>                        
                     `;
             tabelaQuestoesBody.appendChild(row);
         });
@@ -225,7 +219,8 @@ async function salvarOperacao() {
             response = await fetch(`${API_BASE_URL}/avaliacao`, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    credentials: 'include'
                 },
                 body: JSON.stringify(avaliacao)
             });
@@ -233,7 +228,9 @@ async function salvarOperacao() {
             response = await fetch(`${API_BASE_URL}/avaliacao/${currentPersonId}`, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json', 
+                    credentials: 'include'
+
                 },
                 body: JSON.stringify(avaliacao)
             });
@@ -279,19 +276,19 @@ function cancelarOperacao() {
 
 // Função para carregar lista de avaliacao
 async function carregarAvaliacoes() {
-    try {
-        const response = await fetch(`${API_BASE_URL}/avaliacao`);
-        //    debugger
-        if (response.ok) {
-            const avaliacoes = await response.json();
-            renderizarTabelaAvaliacoes(avaliacoes);
-        } else {
-            throw new Error('Erro ao carregar avaliacoes');
-        }
-    } catch (error) {
-        console.error('Erro:', error);
-        mostrarMensagem('Erro ao carregar lista de avaliacoes', 'error');
-    }
+    // try {
+    //     const response = await fetch(`${API_BASE_URL}/avaliacao`);
+    //     //    debugger
+    //     if (response.ok) {
+    //         const avaliacoes = await response.json();
+    //         renderizarTabelaAvaliacoes(avaliacoes);
+    //     } else {
+    //         throw new Error('Erro ao carregar avaliacoes');
+    //     }
+    // } catch (error) {
+    //     console.error('Erro:', error);
+    //     mostrarMensagem('Erro ao carregar lista de avaliacoes', 'error');
+    // }
 }
 
 // Função para renderizar tabela de avaliacoes
