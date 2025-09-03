@@ -47,3 +47,5 @@ git commit -m "$commit_message"
 
 # Faz o push para o repositório remoto
 git push "$remote_name" "$branch_name"
+
+git push

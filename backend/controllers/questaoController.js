@@ -20,6 +20,17 @@ exports.listarQuestoes = async (req, res) => {
   }
 }
 
+exports.listarQuestoes = async (req, res) => {
+  try {
+    const result = await query('SELECT * FROM questao ORDER BY id_questao');
+    // console.log('Resultado do SELECT:', result.rows);//verifica se está retornando algo
+    res.json(result.rows);
+  } catch (error) {
+    console.error('Erro ao listar questoes:', error);
+    res.status(500).json({ error: 'Erro interno do servidor' });
+  }
+}
+
 exports.criarQuestao = async (req, res) => {
   //  console.log('Criando questao com dados:', req.body);
   try {
