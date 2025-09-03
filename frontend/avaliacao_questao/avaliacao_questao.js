@@ -142,7 +142,7 @@ async function preencherFormulario(avaliacao) {
         console.log('Questões carregadas:', questoes);
 
         //limpar tabela de questões
-        const tabelaQuestoesBody = document.getElementById('tabelaQuestoesBody');
+        const tabelaQuestoesBody = document.getElementById('tabelaQuestoesBody'); /// teste
         tabelaQuestoesBody.innerHTML = '';
         // popular tabela de questões   
 
