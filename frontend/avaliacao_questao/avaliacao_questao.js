@@ -1,4 +1,3 @@
-//agora foi
 // Configuração da API, IP e porta.
 const API_BASE_URL = 'http://localhost:3001';
 let currentPersonId = null;
