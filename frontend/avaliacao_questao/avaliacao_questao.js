@@ -1,4 +1,4 @@
-
+//agora foi
 // Configuração da API, IP e porta.
 const API_BASE_URL = 'http://localhost:3001';
 let currentPersonId = null;
@@ -142,7 +142,7 @@ async function preencherFormulario(avaliacao) {
         console.log('Questões carregadas:', questoes);
 
         //limpar tabela de questões
-        const tabelaQuestoesBody = document.getElementById('tabelaQuestoesBody'); /// teste
+        const tabelaQuestoesBody = document.getElementById('tabelaQuestoesBody'); 
         tabelaQuestoesBody.innerHTML = '';
         // popular tabela de questões   
 
