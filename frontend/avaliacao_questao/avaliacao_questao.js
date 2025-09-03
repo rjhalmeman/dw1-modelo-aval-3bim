@@ -131,8 +131,8 @@ async function preencherFormulario(avaliacao) {
     // Preencher com questões
     
     try {
-        let rotaQuestao = API_BASE_URL+'/questao';
-        console.log('Rota questão: ' + rotaQuestao);
+        let rotaQuestao = API_BASE_URL+'/questoes';
+       // console.log('Rota questão: ' + rotaQuestao);
         const response = await fetch(rotaQuestao);
         
         if (!response.ok) throw new Error('Erro ao buscar questões');
@@ -158,7 +158,7 @@ async function preencherFormulario(avaliacao) {
 
 
     } catch (error) {
-        console.error('Erro ao carregar professores:', error);
+        console.error('Erro ao carregar questões:', error);
     }
 }
 
