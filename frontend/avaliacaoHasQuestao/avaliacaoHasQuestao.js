@@ -55,7 +55,7 @@ function limparFormulario() {
 
 
 function mostrarBotoes(btBuscar) {
-    btnBuscar.style.display = btBuscar ? 'inline-block' : 'none';  
+    btnBuscar.style.display = btBuscar ? 'inline-block' : 'none';
 }
 
 // Função para formatar data para exibição
@@ -127,13 +127,47 @@ async function preencherFormulario(avaliacao) {
     document.getElementById('professor_pessoa_id_pessoa').innerHTML = avaliacao.professor_pessoa_id_pessoa || '';
     document.getElementById('porcentagem_tolerancia_avaliacao').innerHTML = avaliacao.porcentagem_tolerancia_avaliacao || '';
 
-    // Preencher com questões
-    
+
+    // Preencher com questões da avaliação
+
     try {
-        let rotaQuestao = API_BASE_URL+'/questoes';
-       // console.log('Rota questão: ' + rotaQuestao);
+        let rotaAvaliacaoHasQuestao = API_BASE_URL + '/avaliacaoHasQuestao/' + avaliacao.id_avaliacao;
+        console.log('Rota avaliacaoHasQuestao: ' + rotaAvaliacaoHasQuestao);
+        const response = await fetch(rotaAvaliacaoHasQuestao);
+
+        if (!response.ok) throw new Error('Erro ao buscar questões da avaliação');
+
+        const questoesDaAvaliacao = await response.json();
+
+        console.log('Questões da avaliacao carregadas:', questoesDaAvaliacao);
+
+        //limpar tabela de questões
+        const tabelaQuestoesBody = document.getElementById('tabelaQuestoesDaAvaliacao');
+        tabelaQuestoesBody.innerHTML = '';
+        // popular tabela de questões   
+
+        questoesDaAvaliacao.forEach(linha => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                        <td>${linha.id_questao}</td>
+                        <td>${linha.texto_questao}</td> 
+                        <td>${linha.nota_maxima_questao}</td>                        
+                    `;
+            tabelaQuestoesBody.appendChild(row);
+        });
+
+
+    } catch (error) {
+        console.error('Erro ao carregar avaliacaoHasQuestao:', error);
+    }
+
+    // Preencher com questões
+
+    try {
+        let rotaQuestao = API_BASE_URL + '/questoes';
+        // console.log('Rota questão: ' + rotaQuestao);
         const response = await fetch(rotaQuestao);
-        
+
         if (!response.ok) throw new Error('Erro ao buscar questões');
 
         const questoes = await response.json();
@@ -141,7 +175,7 @@ async function preencherFormulario(avaliacao) {
         console.log('Questões carregadas:', questoes);
 
         //limpar tabela de questões
-        const tabelaQuestoesBody = document.getElementById('tabelaQuestoesBody'); 
+        const tabelaQuestoesBody = document.getElementById('tabelaQuestoes');
         tabelaQuestoesBody.innerHTML = '';
         // popular tabela de questões   
 
@@ -160,7 +194,7 @@ async function preencherFormulario(avaliacao) {
         console.error('Erro ao carregar questões:', error);
     }
 
-    
+
 
 
 }
@@ -231,7 +265,7 @@ async function salvarOperacao() {
             response = await fetch(`${API_BASE_URL}/avaliacao/${currentPersonId}`, {
                 method: 'PUT',
                 headers: {
-                    'Content-Type': 'application/json', 
+                    'Content-Type': 'application/json',
                     credentials: 'include'
 
                 },

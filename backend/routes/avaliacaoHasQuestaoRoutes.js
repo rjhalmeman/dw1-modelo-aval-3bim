@@ -1,14 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const avaliacaoController = require('./../controllers/avaliacaoController');
+const avaliacaoHasQuestaoController = require('./../controllers/avaliacaoHasQuestaoController');
 
 // CRUD de Avaliacaos
 
-// router.get('/abrirCrudAvaliacaoHasQuestao', avaliacaoController.abrirCrudAvaliacaoHasQuestao);
-// router.get('/', avaliacaoController.listarAvaliacaoHasQuestao);
-// router.post('/', avaliacaoController.criarAvaliacao);
-router.get('/:id', avaliacaoController.obterAvaliacaoHasQuestaoList);
-// router.put('/:id', avaliacaoController.atualizarAvaliacao);
-// router.delete('/:id', avaliacaoController.deletarAvaliacao);
+router.get('/abrirCrudAvaliacaoHasQuestao', avaliacaoHasQuestaoController.abrirCrudAvaliacaoHasQuestao);
+// router.get('/', avaliacaoHasQuestaoController.listarAvaliacaoHasQuestao);
+//  router.post('/', avaliacaoHasQuestaoController.criarAvaliacao);
+router.get('/:id', avaliacaoHasQuestaoController.obterAvaliacaoHasQuestaoList);
+//  router.put('/:id', avaliacaoHasQuestaoController.atualizarAvaliacao);
+//  router.delete('/:id', avaliacaoHasQuestaoController.deletarAvaliacao);
 
 module.exports = router;
