@@ -194,11 +194,7 @@ async function preencherFormulario(avaliacao) {
         console.error('Erro ao carregar questões:', error);
     }
 
-
-
-
 }
-
 
 
 // Função para incluir avaliacao
