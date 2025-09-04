@@ -128,7 +128,7 @@ async function buscarPessoa() {
     bloquearCampos(false);
     searchId.focus();
     try {
-        const response = await fetch(`${API_BASE_URL}/pessoas/${id}`);
+        const response = await fetch(`${API_BASE_URL}/pessoa/${id}`);
 
         if (response.ok) {
             const pessoa = await response.json();
@@ -282,7 +282,7 @@ async function salvarOperacao() {
     let responsePessoa = null;
     try {
         if (operacao === 'incluir') {
-            responseProfessor = await fetch(`${API_BASE_URL}/pessoas`, {
+            responseProfessor = await fetch(`${API_BASE_URL}/pessoa`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -328,7 +328,7 @@ async function salvarOperacao() {
             }
 
         } else if (operacao === 'alterar') {
-            responseProfessor = await fetch(`${API_BASE_URL}/pessoas/${currentPersonId}`, {
+            responseProfessor = await fetch(`${API_BASE_URL}/pessoa/${currentPersonId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -480,7 +480,7 @@ async function salvarOperacao() {
             }
             //agora exclui da tabela pessoa
             // console.log('Excluindo pessoa com ID:', currentPersonId);
-            responseProfessor = await fetch(`${API_BASE_URL}/pessoas/${currentPersonId}`, {
+            responseProfessor = await fetch(`${API_BASE_URL}/pessoa/${currentPersonId}`, {
                 method: 'DELETE'
             });
             responsePessoa = responseProfessor;
@@ -522,7 +522,7 @@ function cancelarOperacao() {
 // Função para carregar lista de pessoas
 async function carregarPessoas() {
     try {
-        const response = await fetch(`${API_BASE_URL}/pessoas`);
+        const response = await fetch(`${API_BASE_URL}/pessoa`);
 
         if (response.ok) {
             const pessoas = await response.json();
