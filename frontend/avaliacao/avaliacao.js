@@ -134,6 +134,7 @@ async function preencherFormulario(avaliacao) {
 
     // Preencher o select de professores
     try {
+        
         const response = await fetch('http://localhost:3001/professor');
         if (!response.ok) throw new Error('Erro ao buscar professores');
         const professores = await response.json();
@@ -149,6 +150,7 @@ async function preencherFormulario(avaliacao) {
 
         // popula com dados vindos da API
         professores.forEach(prof => {
+            
             const option = document.createElement('option');
             option.value = prof.pessoa_id_pessoa;
             option.textContent = `${prof.mnemonico_professor} - ${prof.departamento_professor}`;
@@ -156,6 +158,7 @@ async function preencherFormulario(avaliacao) {
                 option.selected = true; // marca o professor da avaliação
             }
             selectProfessor.appendChild(option);
+            
         });
 
     } catch (error) {
