@@ -77,7 +77,7 @@ const menuRoutes = require('./routes/menuRoutes');
 app.use('/menu', menuRoutes);
 
 const pessoaRoutes = require('./routes/pessoaRoutes');
-app.use('/pessoas', pessoaRoutes);
+app.use('/pessoa', pessoaRoutes);
 
 const questaoRoutes = require('./routes/questaoRoutes');
 app.use('/questao', questaoRoutes);
