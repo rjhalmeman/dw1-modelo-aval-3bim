@@ -161,10 +161,10 @@ async function preencherFormulario(avaliacao) {
         console.error('Erro ao carregar avaliacaoHasQuestao:', error);
     }
 
-    // Preencher com questões
+    // Preencher com questões disponíveis
 
     try {
-        let rotaQuestao = API_BASE_URL + '/questoes';
+        let rotaQuestao = API_BASE_URL + '/questao';
         // console.log('Rota questão: ' + rotaQuestao);
         const response = await fetch(rotaQuestao);
 
