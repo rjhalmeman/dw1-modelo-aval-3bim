@@ -134,7 +134,7 @@ async function preencherFormulario(avaliacao) {
 
     // Preencher o select de professores
     try {
-        
+
         const response = await fetch('http://localhost:3001/professor');
         if (!response.ok) throw new Error('Erro ao buscar professores');
         const professores = await response.json();
@@ -150,7 +150,7 @@ async function preencherFormulario(avaliacao) {
 
         // popula com dados vindos da API
         professores.forEach(prof => {
-            
+
             const option = document.createElement('option');
             option.value = prof.pessoa_id_pessoa;
             option.textContent = `${prof.mnemonico_professor} - ${prof.departamento_professor}`;
@@ -158,7 +158,7 @@ async function preencherFormulario(avaliacao) {
                 option.selected = true; // marca o professor da avaliação
             }
             selectProfessor.appendChild(option);
-            
+
         });
 
     } catch (error) {
@@ -215,12 +215,13 @@ async function salvarOperacao() {
         descricao_avaliacao: formData.get('descricao_avaliacao'),
         data_avaliacao: formData.get('data_avaliacao'),
         professor_pessoa_id_pessoa: formData.get('professor_pessoa_id_pessoa'),
-        porcentagem_tolerancia_avaliacao: formData.get('porcentagem_tolerancia_avaliacao')        
+        porcentagem_tolerancia_avaliacao: formData.get('porcentagem_tolerancia_avaliacao')
     };
+   // alert("avaliacao => " + JSON.stringify(avaliacao) + "operacao " + operacao)
     let response = null;
     try {
         if (operacao === 'incluir') {
-           // console.log('Incluindo nova avaliacao com dados:', avaliacao);
+            // console.log('Incluindo nova avaliacao com dados:', avaliacao);
 
             response = await fetch(`${API_BASE_URL}/avaliacao`, {
                 method: 'POST',
