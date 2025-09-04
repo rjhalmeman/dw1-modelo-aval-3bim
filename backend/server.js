@@ -80,7 +80,7 @@ const pessoaRoutes = require('./routes/pessoaRoutes');
 app.use('/pessoas', pessoaRoutes);
 
 const questaoRoutes = require('./routes/questaoRoutes');
-app.use('/questoes', questaoRoutes);
+app.use('/questao', questaoRoutes);
 
 const professorRoutes = require('./routes/professorRoutes');
 app.use('/professor', professorRoutes);
