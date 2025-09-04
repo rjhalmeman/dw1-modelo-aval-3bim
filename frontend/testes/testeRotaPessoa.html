@@ -39,8 +39,9 @@
 
             const resultDiv = document.getElementById('result');
             resultDiv.classList.add('hidden');
-
-            fetch(`http://localhost:3001/pessoas/${pessoaId}`)
+            let aRota = `http://localhost:3001/pessoas/${pessoaId}`;
+            console.log(aRota);
+            fetch(aRota)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Pessoa não encontrada');

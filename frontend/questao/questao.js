@@ -92,7 +92,7 @@ async function buscarQuestao() {
     //focus no campo searchId
     searchId.focus();
     try {
-        const response = await fetch(`${API_BASE_URL}/questoes/${id}`);
+        const response = await fetch(`${API_BASE_URL}/questao/${id}`);
 
         if (response.ok) {
             const questao = await response.json();
@@ -177,7 +177,7 @@ async function salvarOperacao() {
     let response = null;
     try {
         if (operacao === 'incluir') {
-            response = await fetch(`${API_BASE_URL}/questoes`, {
+            response = await fetch(`${API_BASE_URL}/questao`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -185,7 +185,7 @@ async function salvarOperacao() {
                 body: JSON.stringify(questao)
             });
         } else if (operacao === 'alterar') {
-            response = await fetch(`${API_BASE_URL}/questoes/${currentPersonId}`, {
+            response = await fetch(`${API_BASE_URL}/questao/${currentPersonId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
@@ -194,7 +194,7 @@ async function salvarOperacao() {
             });
         } else if (operacao === 'excluir') {
             // console.log('Excluindo questao com ID:', currentPersonId);
-            response = await fetch(`${API_BASE_URL}/questoes/${currentPersonId}`, {
+            response = await fetch(`${API_BASE_URL}/questao/${currentPersonId}`, {
                 method: 'DELETE'
             });
             console.log('Questao excluída' + response.status);
@@ -235,7 +235,7 @@ function cancelarOperacao() {
 // Função para carregar lista de questoes
 async function carregarQuestoes() {
     try {
-        const response = await fetch(`${API_BASE_URL}/questoes`);
+        const response = await fetch(`${API_BASE_URL}/questao`);
     //    debugger
         if (response.ok) {
             const questoes = await response.json();

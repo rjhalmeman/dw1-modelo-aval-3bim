@@ -31,7 +31,7 @@ app.use(cookieParser());
 // Em produção, você deve restringir isso para domínios específicos por segurança.
 // Aqui, estamos permitindo qualquer origem, o que é útil para desenvolvimento, mas deve ser ajustado em produção.
 app.use((req, res, next) => {
-  const allowedOrigins = ['http://127.0.0.1:5500', 'http://127.0.0.1:5501', 'http://localhost:3000', 'http://localhost:3001'];
+  const allowedOrigins = ['http://127.0.0.1:5500','http://localhost:5500', 'http://127.0.0.1:5501', 'http://localhost:3000', 'http://localhost:3001'];
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin);
@@ -80,7 +80,7 @@ const pessoaRoutes = require('./routes/pessoaRoutes');
 app.use('/pessoas', pessoaRoutes);
 
 const questaoRoutes = require('./routes/questaoRoutes');
-app.use('/questoes', questaoRoutes);
+app.use('/questao', questaoRoutes);
 
 const professorRoutes = require('./routes/professorRoutes');
 app.use('/professor', professorRoutes);
@@ -94,6 +94,9 @@ app.use('/avaliado', avaliadoRoutes);
 
 const avaliacaoRoutes = require('./routes/avaliacaoRoutes');
 app.use('/avaliacao', avaliacaoRoutes);
+
+const avaliacaoHasQuestaoRoutes = require('./routes/avaliacaoHasQuestaoRoutes');
+app.use('/avaliacaoHasQuestao', avaliacaoHasQuestaoRoutes);
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
