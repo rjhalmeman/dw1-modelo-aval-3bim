@@ -50,7 +50,25 @@ function bloquearCampos(bloquearPrimeiro) {
 
 // Função para limpar formulário
 function limparFormulario() {
+    //debugger;
+    const tabelaQuestoesBody = document.getElementById('tabelaQuestoesDaAvaliacao');
+    tabelaQuestoesBody.innerHTML = "<table id='tabelaQuestoesDaAvaliacao'>" +
+        " <thead>" +
+        "<tr>" +
+        "<th>ID</th>" +
+        "<th>Texto</th>" +
+        "<th>Nota</th>" +
+        "</tr>" +
+        "</thead>" +
+        "<tbody id='questoesDaAvaliacaoTableBody'></tbody>" +
+        "</table>";
+
+
     form.reset();
+
+
+
+
 }
 
 
@@ -92,11 +110,22 @@ async function buscarAvaliacao() {
             mostrarMensagem('Avaliacao encontrada!', 'success');
 
         } else if (response.status === 404) {
+            // alert('Avaliacao não encontrada.');
+
+            const tbody = document.getElementById("questoesDaAvaliacaoTableBody");
+            if (tbody) {
+                tbody.innerHTML = "";
+            } else {
+                console.warn("Elemento tbody não encontrado.");
+            }
+
             limparFormulario();
+
+
             searchId.value = id;
-            mostrarBotoes(true, true, false, false, false, false); //mostrarBotoes(btBuscar, btIncluir, btAlterar, btExcluir, btSalvar, btCancelar)
-            mostrarMensagem('Avaliacao não encontrada. Você pode incluir uma nova avaliacao.', 'info');
-            bloquearCampos(false);//bloqueia a pk e libera os demais campos
+            mostrarBotoes(true, false, false, false, false, false); //mostrarBotoes(btBuscar, btIncluir, btAlterar, btExcluir, btSalvar, btCancelar)
+            mostrarMensagem('Avaliacao não encontrada.', 'info');
+            bloquearCampos(false);//libera a pk e bloqueia os demais campos
             //enviar o foco para o campo de nome
         } else {
             throw new Error('Erro ao buscar avaliacao');

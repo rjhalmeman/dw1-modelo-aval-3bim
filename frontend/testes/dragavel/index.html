@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Drag and Drop Questões</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container" id="avaliacao">
+    <h3>Questões da Avaliação</h3>
+    <div id="avaliacao-list"></div>
+  </div>
+
+  <div class="container" id="disponiveis">
+    <h3>Questões disponíveis</h3>
+    <div id="disponiveis-list">
+      <div class="questao" draggable="true" data-id="1">Questão 1</div>
+      <div class="questao" draggable="true" data-id="2">Questão 2</div>
+      <div class="questao" draggable="true" data-id="3">Questão 3</div>
+      <div class="questao" draggable="true" data-id="4">Questão 4</div>
+    </div>
+  </div>
+
+  <script>
+    const disponiveisList = document.getElementById("disponiveis-list");
+    const avaliacaoList = document.getElementById("avaliacao-list");
+    const avaliacaoContainer = document.getElementById("avaliacao");
+    const disponiveisContainer = document.getElementById("disponiveis");
+
+    let draggedItem = null;
+
+    // Adiciona event listeners para todos os itens
+    function addDragListeners(item) {
+      item.addEventListener("dragstart", e => {
+        draggedItem = item;
+        e.dataTransfer.setData("text/plain", item.getAttribute("data-id"));
+        item.classList.add("dragging");
+        setTimeout(() => item.style.display = "none", 0);
+      });
+
+      item.addEventListener("dragend", e => {
+        item.classList.remove("dragging");
+        setTimeout(() => {
+          item.style.display = "flex";
+          draggedItem = null;
+        }, 0);
+      });
+    }
+
+    // Inicializa os listeners para as questões iniciais
+    document.querySelectorAll(".questao").forEach(item => {
+      addDragListeners(item);
+    });
+
+    // Configura os containers
+    const containers = [avaliacaoContainer, disponiveisContainer];
+    
+    containers.forEach(container => {
+      container.addEventListener("dragover", e => {
+        e.preventDefault();
+        container.classList.add("over");
+      });
+
+      container.addEventListener("dragleave", () => {
+        container.classList.remove("over");
+      });
+
+      container.addEventListener("drop", e => {
+        e.preventDefault();
+        container.classList.remove("over");
+        
+        if (draggedItem) {
+          // Se estiver soltando no container de avaliação
+          if (container.id === "avaliacao") {
+            // Verifica se a questão já existe na avaliação
+            const existingQuestion = Array.from(avaliacaoList.children).find(
+              item => item.getAttribute("data-id") === draggedItem.getAttribute("data-id")
+            );
+            
+            if (!existingQuestion) {
+              const clone = draggedItem.cloneNode(true);
+              clone.setAttribute("draggable", "false");
+              clone.style.display = "flex";
+              
+              // Adiciona botão de excluir
+              const btn = document.createElement("button");
+              btn.textContent = "X";
+              btn.addEventListener("click", () => {
+                clone.remove();
+                // Reativa o item original na lista de disponíveis
+                const originalItem = document.querySelector(`#disponiveis-list .questao[data-id="${draggedItem.getAttribute("data-id")}"]`);
+                if (originalItem) {
+                  originalItem.style.display = "flex";
+                }
+              });
+              
+              clone.appendChild(btn);
+              avaliacaoList.appendChild(clone);
+            }
+          }
+        }
+      });
+    });
+
+    // Impede que o evento de drop seja propagado para elementos pais
+    document.addEventListener("dragover", e => e.preventDefault());
+    document.addEventListener("drop", e => e.preventDefault());
+  </script>
+</body>
+</html>
