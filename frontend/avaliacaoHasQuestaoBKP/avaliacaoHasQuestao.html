@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD - Avaliação</title>
+    <link rel="stylesheet" href="/avaliacaoHasQuestao/avaliacaoHasQuestao.css">
+</head>
+
+<body>
+    <header>
+        <h1>CRUD Questões da Avaliação</h1>
+    </header>
+
+    <main>
+        <section class="form-section">
+            <h2>Questões da Avaliação</h2>
+
+            <form id="avaliacaoForm">
+                <div class="search-container">
+                    <label for="searchId">Buscar uma AVALIAÇÃO por ID:</label>
+                    <div class="search-input-group">
+                        <input type="number" id="searchId" placeholder="Digite o ID para buscar">
+                        <button type="button" id="btnBuscar">🔍 Buscar</button>
+                    </div>
+                    <div class="infoAvaliacao">
+                        <span id="descricao_avaliacao">desc</span>
+                        <span id="data_avaliacao">data</span>
+                        <span id="professor_pessoa_id_pessoa">professor</span>
+                        <span id="porcentagem_tolerancia_avaliacao">porcentagem</span>
+                    </div>
+
+                </div>
+            </form>
+
+            <div class="tablesContainer">
+                <div class="questoesDaAvaliacaoContainer">
+                    <legend>Questões da Avaliação</legend>
+                    <table id="tabelaQuestoesDaAvaliacao">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Texto</th>
+                                <th>Nota</th>
+                            </tr>
+                        </thead>
+                        <tbody id="questoesDaAvaliacaoTableBody"></tbody>
+                    </table>
+                </div>
+
+                <div class="questoesContainer">
+                    <legend>Questões disponíveis</legend>
+                    <table id="tabelaQuestoes">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Texto</th>
+                                <th>Nota</th>
+                            </tr>
+                        </thead>
+                        <tbody id="questoesTableBody"></tbody>
+                    </table>
+                </div>
+            </div> <!-- .tablesContainer -->
+        </section>
+
+        <section class="list-section">
+            <div class="table-container">
+                <table id="avaliacoesTable">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Texto</th>
+                            <th>Data</th>
+                            <th>Professor ID</th>
+                            <th>Tolerância</th>
+                        </tr>
+                    </thead>
+                    <tbody id="avaliacoesTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+
+    </main>
+
+    <footer>
+        <p>&copy; 2025 CRUD Avaliacao</p>
+    </footer>
+
+    <div id="messageContainer" class="message-container"></div>
+
+    <script src="/avaliacaoHasQuestao/avaliacaoHasQuestao.js" defer></script>
+
+</body>
+
+</html>

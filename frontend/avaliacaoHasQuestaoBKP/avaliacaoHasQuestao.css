@@ -469,30 +469,21 @@ footer {
     text-overflow: ellipsis;
 }
 
-
-
-.questao {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #fff;
-    margin: 5px 0;
-    padding: 5px 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    cursor: grab;
+/* Opcional: estilização individual para melhor visualização */
+#descricao_avaliacao {
+    font-weight: bold;
 }
 
-.questao button {
-    margin-left: 10px;
-    background: red;
-    color: white;
-    border: none;
-    padding: 2px 6px;
-    border-radius: 5px;
-    cursor: pointer;
+#data_avaliacao {
+    color: #555;
+    font-style: italic;
 }
 
-/* .questao.dragging {
-    opacity: 0.5;
-} */
+#professor_pessoa_id_pessoa {
+    color: #333;
+}
+
+#porcentagem_tolerancia_avaliacao {
+    font-weight: bold;
+    color: #2c5e2c;
+}
