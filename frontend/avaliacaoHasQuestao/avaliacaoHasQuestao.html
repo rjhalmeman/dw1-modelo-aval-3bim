@@ -13,6 +13,12 @@
     <h1>CRUD Questões da Avaliação</h1>
   </header>
   <main>
+    <div>
+      <label for="avaliacaoSelect">Selecione uma Avaliação:</label>
+      <select id="avaliacaoSelect" onchange="handleAvaliacaoChange()">
+        <option value="">-- Selecione --</option>
+      </select>
+    </div>
     <div class="tablesContainer">
       <div class="tableContainer" id="avaliacao">
         <h3>Questões da Avaliação</h3>

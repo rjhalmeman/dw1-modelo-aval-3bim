@@ -6,12 +6,127 @@ const avaliacaoList = document.getElementById("avaliacao-list");
 const avaliacaoContainer = document.getElementById("avaliacao");
 const disponiveisContainer = document.getElementById("disponiveis");
 
-
+let avaliacaoId = null;
 // Carregar lista de avaliacoes ao inicializar
 document.addEventListener('DOMContentLoaded', () => {
-    carregarAvaliacoes();
+    selectAvaliacoes();
+    carregarQuestoesAvaliacao(avaliacaoId);
+   // carregarAvaliacoes();
+   carregarQuestoes(); //todas as questões
 });
 
+async function selectAvaliacoes() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/avaliacao`);
+        if (response.ok) {
+            const avaliacoes = await response.json();
+            const select = document.getElementById('avaliacaoSelect');
+            select.innerHTML = '<option value="">Selecione uma avaliação</option>'; // Limpa e adiciona opção padrão
+
+            avaliacoes.forEach(avaliacao => {
+                const option = document.createElement('option');
+                option.value = avaliacao.id_avaliacao;
+                option.textContent = avaliacao.descricao_avaliacao;
+                select.appendChild(option);
+            });
+
+            // Adiciona listener para carregar questões da avaliação selecionada
+            select.addEventListener('change', async (event) => {
+                avaliacaoId = event.target.value;
+                if (avaliacaoId) {
+                    await carregarQuestoesAvaliacao(avaliacaoId);
+                } else {
+                    avaliacaoList.innerHTML = ''; // Limpa a lista se nenhuma avaliação for selecionada
+                }
+            });
+        } else {
+            throw new Error('Erro ao carregar avaliações');
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        mostrarMensagem('Erro ao carregar lista de avaliações', 'error');
+    }
+}
+
+// Função para carregar questões da avaliação selecionada
+async function carregarQuestoesAvaliacao(avaliacaoId) {
+    try {
+        let rotaAvaliacaoHasQuestao = API_BASE_URL + '/avaliacaoHasQuestao/' + avaliacaoId;
+        const response = await fetch(rotaAvaliacaoHasQuestao);
+        if (response.ok) {
+            const questoes = await response.json();
+            avaliacaoList.innerHTML = ''; // Limpa a lista antes de adicionar novos itens
+
+            questoes.forEach(questao => {
+                const div = document.createElement('div');
+                div.className = 'questao';
+                div.setAttribute('draggable', 'false'); // Não permite arrastar questões já na avaliação
+                div.setAttribute('data-id', questao.id_questao);
+                div.textContent = questao.texto_questao;
+
+                // Adiciona botão de excluir
+                const btn = document.createElement('button');
+                btn.textContent = 'X';
+                btn.addEventListener('click', () => {
+                    div.remove();
+                    // Reativa o item original na lista de disponíveis
+                    const originalItem = document.querySelector(`#disponiveis-list .questao[data-id="${questao.id_questao}"]`);
+                    if (originalItem) {
+                        originalItem.style.display = 'flex';
+                    }
+                });
+
+                div.appendChild(btn);
+                avaliacaoList.appendChild(div);
+            });
+        } else {
+            throw new Error('Erro ao carregar questões da avaliação');
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        mostrarMensagem('Erro ao carregar questões da avaliação', 'error');
+    }
+}
+
+async function carregarQuestoes(){
+    try {
+        const response = await fetch(`${API_BASE_URL}/questao`);
+        if (response.ok) {
+            const questoes = await response.json();
+            disponiveisList.innerHTML = ''; // Limpa a lista antes de adicionar novos itens
+            
+          questoes.forEach(questao => {
+                const div = document.createElement('div');
+                div.className = 'questao';
+                div.setAttribute('draggable', 'true');
+                div.setAttribute('data-id', questao.id_questao);
+                div.textContent = questao.texto_questao;
+
+                // Adiciona event listeners para drag and drop
+                addDragListeners(div);
+
+                disponiveisList.appendChild(div);
+            }); 
+        } else {
+            throw new Error('Erro ao carregar questões');
+        }
+    } catch (error) {
+        console.error('Erro:', error);
+        mostrarMensagem('Erro ao carregar lista de questões', 'error');
+    }
+}   
+                
+
+// Função para mostrar mensagens ao usuário
+function mostrarMensagem(mensagem, tipo) {
+    const mensagemDiv = document.getElementById('mensagem');
+    mensagemDiv.textContent = mensagem;
+    mensagemDiv.className = tipo; // 'success' ou 'error'
+    setTimeout(() => {
+        mensagemDiv.textContent = '';
+        mensagemDiv.className = '';
+    }, 3000);
+}
 // Função para carregar lista de avaliacao
 async function carregarAvaliacoes() {
     try {
