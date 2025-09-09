@@ -184,6 +184,37 @@ async function incluirAvaliacao() {
     document.getElementById('descricao_avaliacao').focus();
     operacao = 'incluir';
     // console.log('fim nova avaliacao - currentPersonId: ' + currentPersonId);
+
+    // Preencher o select de professores
+    try {
+
+        const response = await fetch('http://localhost:3001/professor');
+        if (!response.ok) throw new Error('Erro ao buscar professores');
+        const professores = await response.json();
+        
+     //   console.log(JSON.stringify(professores));
+
+        const selectProfessor = document.getElementById('professor_pessoa_id_pessoa');
+        selectProfessor.innerHTML = ''; // limpa antes de preencher
+
+        // cria opção vazia
+        const optionVazia = document.createElement('option');
+        optionVazia.value = '';
+        optionVazia.textContent = 'Selecione um professor';
+        selectProfessor.appendChild(optionVazia);
+
+        // popula com dados vindos da API
+        professores.forEach(prof => {
+            const option = document.createElement('option');
+            option.value = prof.pessoa_id_pessoa;
+            option.textContent = `${prof.mnemonico_professor} - ${prof.departamento_professor}`;
+            selectProfessor.appendChild(option);
+        });
+
+    } catch (error) {
+        console.error('Erro ao carregar professores:', error);
+    }
+
 }
 
 // Função para alterar avaliacao
@@ -217,7 +248,7 @@ async function salvarOperacao() {
         professor_pessoa_id_pessoa: formData.get('professor_pessoa_id_pessoa'),
         porcentagem_tolerancia_avaliacao: formData.get('porcentagem_tolerancia_avaliacao')
     };
-   // alert("avaliacao => " + JSON.stringify(avaliacao) + "operacao " + operacao)
+    // alert("avaliacao => " + JSON.stringify(avaliacao) + "operacao " + operacao)
     let response = null;
     try {
         if (operacao === 'incluir') {
