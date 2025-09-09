@@ -15,6 +15,36 @@ document.addEventListener('DOMContentLoaded', () => {
    carregarQuestoes(); //todas as questões
 });
 
+
+function salvarQuestoesDaAvaliacao() {
+    alert('Salvando questões da avaliação...');
+    if (!avaliacaoId) {
+        mostrarMensagem('Selecione uma avaliação antes de salvar', 'error');
+        return;
+    }
+
+    const questoesIds = Array.from(avaliacaoList.children).map(item => item.getAttribute('data-id'));
+
+    fetch(`${API_BASE_URL}/avaliacaoHasQuestao/${avaliacaoId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ questoes: questoesIds })
+    })
+    .then(response => {
+        if (response.ok) {
+            mostrarMensagem('Questões salvas com sucesso!', 'success');
+        } else {
+            throw new Error('Erro ao salvar questões');
+        }
+    })
+    .catch(error => {
+        console.error('Erro:', error);
+        mostrarMensagem('Erro ao salvar questões', 'error');
+    });
+}
+
 async function selectAvaliacoes() {
     try {
         const response = await fetch(`${API_BASE_URL}/avaliacao`);
